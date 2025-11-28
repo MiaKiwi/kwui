@@ -3,7 +3,7 @@ import Accordion from "./Accordion.mjs";
 
 
 
-export default class AccordionsContainer extends Component {
+export default class AccordionGroup extends Component {
     /**
      * Creates a AccordionsGroup component
      * @param {string} params.props.accordions The accordions to include in the group

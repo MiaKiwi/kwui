@@ -1,9 +1,13 @@
+import Avatar from "../kwui/components/basic/Avatar.mjs";
+import Fontawesome from "../kwui/components/basic/icons/Fontawesome.mjs";
 import Component from "../kwui/components/Component.mjs";
 import Anchor from "../kwui/components/controls/Anchor.mjs";
 import Button from "../kwui/components/controls/Button.mjs";
 import ButtonGroup from "../kwui/components/controls/ButtonGroup.mjs";
 import Accordion from "../kwui/components/layout/accordion/Accordion.mjs";
-import AccordionsContainer from "../kwui/components/layout/accordion/AccordionsContainer.mjs";
+import AccordionGroup from "../kwui/components/layout/accordion/AccordionGroup.mjs";
+import BreadcrumbItem from "../kwui/components/navigation/breadcrumbs/BreadcrumbItem.mjs";
+import Breadcrumbs from "../kwui/components/navigation/breadcrumbs/Breadcrumbs.mjs";
 
 let app = document.getElementById('app');
 
@@ -13,7 +17,7 @@ world.textContent = "World!";
 let anchor = new Anchor({
     props: {
         href: 'https://example.com',
-        target: '_blank',
+        // target: '_blank',
         shy: true
     },
     children: [
@@ -73,7 +77,8 @@ let buttonEmpty = new Button({
         toggle: true,
         toggledChildren: [
             "Liked"
-        ]
+        ],
+        iconLocation: 'right'
     },
     children: [
         "Like"
@@ -90,6 +95,17 @@ buttonOutline.addEventListener('click', async () => {
 
     iconEl.classList.remove('fa-shake');
 });
+
+let iconBtn = new Button({
+    props: {
+        icon: '<i class="fa-solid fa-cog"></i>',
+        style: 'solid',
+        cooldown: 1000
+    },
+    theme: 'primary'
+});
+
+app.appendChild(iconBtn.render());
 
 
 let group = new ButtonGroup({
@@ -116,7 +132,7 @@ let accordion1 = new Accordion({
 
 app.appendChild(accordion1.render());
 
-let accordionsContainer = new AccordionsContainer({
+let accordionsContainer = new AccordionGroup({
     props: {
         accordions: [
             new Accordion({
@@ -146,3 +162,56 @@ let accordionsContainer = new AccordionsContainer({
 })
 
 app.appendChild(accordionsContainer.render());
+
+let avatarText = new Avatar({
+    props: {
+        content: Fontawesome.createIcon('<i class="fa-solid fa-user-astronaut"></i>'),
+        shape: 'rounded',
+        inline: true
+    },
+    theme: 'primary'
+});
+
+let avatarImg = new Avatar({
+    props: {
+        content: "SA",
+        src: 'https://placehold.co/400',
+        alt: 'Placeholder Image',
+        shape: 'circle'
+    }
+});
+
+app.appendChild(avatarImg.render());
+
+let p = document.createElement('p');
+p.appendChild(avatarText.render());
+p.appendChild(document.createTextNode("This is an avatar with an icon as content."));
+app.appendChild(p);
+
+let breadcrumbs = new Breadcrumbs({
+    props: {
+        separator: '<i class="fa-solid fa-chevron-right"></i>',
+        items: [
+            new BreadcrumbItem({
+                props: {
+                    content: ['Home'],
+                    href: '/'
+                }
+            }),
+            new BreadcrumbItem({
+                props: {
+                    content: ['Products'],
+                    href: '/products'
+                }
+            }),
+            new BreadcrumbItem({
+                props: {
+                    content: ['Electronics'],
+                    href: '/electronics'
+                }
+            })
+        ]
+    }
+});
+
+app.appendChild(breadcrumbs.render());

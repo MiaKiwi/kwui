@@ -332,4 +332,23 @@ export default class Component {
     getElement() {
         return this._element;
     }
+
+
+
+    /**
+     * Converts input to an HTMLElement
+     * @param {Component|HTMLElement|string} input The input to convert
+     * @returns {HTMLElement} The input as an HTMLElement
+     */
+    static getInputAsHTMLElement(input) {
+        if (input instanceof Component) {
+            return input.render();
+        } else if (input instanceof HTMLElement) {
+            return input;
+        } else {
+            let span = document.createElement('span');
+            span.innerHTML = String(input);
+            return span;
+        }
+    }
 }

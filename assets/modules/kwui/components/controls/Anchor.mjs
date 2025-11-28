@@ -35,7 +35,7 @@ export default class Anchor extends Component {
         return [
             `.anchor{text-decoration:none;cursor:pointer;}`,
             `.anchor:not(.shy){color:var(--primary);}`,
-            `.anchor:hover,.anchor:focus{text-decoration:underline;}`,
+            `.anchor:hover,.anchor:focus,.anchor.active{text-decoration:underline;}`,
             `.anchor:not(.shy).kw-{{theme}}{color:var(--{{theme}});&:visited,&:active{color:var(--{{theme}}-30);}}`,
             `.anchor.shy{color:inherit;}&:visited,&:active{color:inherit;}`
         ];
