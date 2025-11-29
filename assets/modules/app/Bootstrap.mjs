@@ -6,6 +6,7 @@ import Button from "../kwui/components/controls/Button.mjs";
 import ButtonGroup from "../kwui/components/controls/ButtonGroup.mjs";
 import Accordion from "../kwui/components/layout/accordion/Accordion.mjs";
 import AccordionGroup from "../kwui/components/layout/accordion/AccordionGroup.mjs";
+import Callout from "../kwui/components/layout/Callout.mjs";
 import BreadcrumbItem from "../kwui/components/navigation/breadcrumbs/BreadcrumbItem.mjs";
 import Breadcrumbs from "../kwui/components/navigation/breadcrumbs/Breadcrumbs.mjs";
 
@@ -215,3 +216,69 @@ let breadcrumbs = new Breadcrumbs({
 });
 
 app.appendChild(breadcrumbs.render());
+
+let defaultCallout = new Callout({
+    props: {
+        style: 'default'
+    },
+    children: [
+        "This is a default callout."
+    ]
+});
+
+app.appendChild(defaultCallout.render());
+
+let importantCallout = new Callout({
+    props: {
+        style: 'important'
+    },
+    children: [
+        "This is an important callout!"
+    ]
+});
+
+app.appendChild(importantCallout.render());
+
+let infoCallout = new Callout({
+    props: {
+        style: 'info'
+    },
+    children: [
+        "This is an info callout."
+    ]
+});
+
+app.appendChild(infoCallout.render());
+
+let successCallout = new Callout({
+    props: {
+        style: 'success'
+    },
+    children: [
+        "This is a success callout!"
+    ]
+});
+
+app.appendChild(successCallout.render());
+
+let warningCallout = new Callout({
+    props: {
+        style: 'warning'
+    },
+    children: [
+        "This is a warning callout."
+    ]
+});
+
+app.appendChild(warningCallout.render());
+
+let dangerCallout = new Callout({
+    props: {
+        style: 'danger'
+    },
+    children: [
+        "This is a danger callout!"
+    ]
+});
+
+app.appendChild(dangerCallout.render());
