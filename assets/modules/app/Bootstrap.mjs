@@ -1,4 +1,5 @@
 import Avatar from "../kwui/components/basic/Avatar.mjs";
+import Chip from "../kwui/components/basic/Chip.mjs";
 import Fontawesome from "../kwui/components/basic/icons/Fontawesome.mjs";
 import Component from "../kwui/components/Component.mjs";
 import Anchor from "../kwui/components/controls/Anchor.mjs";
@@ -277,8 +278,93 @@ let dangerCallout = new Callout({
         style: 'danger'
     },
     children: [
-        "This is a danger callout!"
+        "This is a danger callout!",
+        "Yep"
     ]
 });
 
 app.appendChild(dangerCallout.render());
+
+let defaultChip = new Chip({
+    children: [
+        "Default Chip"
+    ]
+});
+
+app.appendChild(defaultChip.render());
+
+let roundedChip = new Chip({
+    props: {
+        shape: 'rounded',
+        icon: Fontawesome.createIcon('fa-solid fa-check'),
+        closeable: true
+    },
+    children: [
+        "Rounded Chip"
+    ],
+    theme: 'positive'
+});
+
+roundedChip.addEventListener('chip-close', (e) => {
+    alert("Rounded Chip was closed!");
+});
+
+app.appendChild(roundedChip.render());
+
+let squareChip = new Chip({
+    props: {
+        shape: 'square',
+        icon: Fontawesome.createIcon('fa-solid fa-info-circle'),
+        closeable: false
+    },
+    children: [
+        "Square Chip"
+    ],
+    theme: 'info'
+});
+
+app.appendChild(squareChip.render());
+
+let inlineChip1 = new Chip({
+    props: {
+        icon: Fontawesome.createIcon('fa-solid fa-user'),
+        inline: true
+    },
+    children: [
+        "Inline Chip 1"
+    ],
+    theme: 'primary'
+});
+
+let inlineChip2 = new Chip({
+    props: {
+        icon: Fontawesome.createIcon('fa-solid fa-cog'),
+        inline: true
+    },
+    children: [
+        "Inline Chip 2"
+    ],
+    theme: 'warning'
+});
+
+app.appendChild(inlineChip1.render());
+app.appendChild(inlineChip2.render());
+
+let linkChip = new Chip({
+    props: {
+        icon: Fontawesome.createIcon('fa-solid fa-link')
+    },
+    children: [
+        new Anchor({
+            props: {
+                href: 'https://example.com',
+                target: '_blank',
+                shy: true
+            },
+            children: ["Link Chip"]
+        })
+    ],
+    theme: 'primary'
+});
+
+app.appendChild(linkChip.render());

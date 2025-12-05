@@ -77,6 +77,7 @@ export default class Button extends Component {
             `.btn:not(.disabled):not(:disabled):active,.btn.active{background-color:var(--btn-active-bg);color:var(--btn-active-fg);transform:translateY(var(--btn-interact-translateY));}`,
             `.btn:not(.icon-right)>.icon{margin-right:var(--btn-icon-margin);}`,
             `.btn.icon-right>.icon{margin-left:var(--btn-icon-margin);}`,
+            `.btn.icon-only{padding:min(var(--btn-pad-v), var(--btn-pad-h));}`,
             `.btn.icon-only>.icon{margin:0;}`,
             `.btn.kw-{{theme}}{--btn-bg:var(--{{theme}});--btn-fg:var(--{{theme}}-fg);--btn-active-bg:var(--{{theme}}-10);--btn-active-fg:var(--{{theme}}-90);}`,
             `.btn.outline{background-color:transparent;color:var(--btn-bg);border:var(--border-thin-width) solid var(--btn-bg);padding:calc(var(--btn-pad-v) - var(--border-thin-width)) calc(var(--btn-pad-h) - var(--border-thin-width));}`,

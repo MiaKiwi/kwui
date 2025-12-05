@@ -29,7 +29,9 @@ export default class Fontawesome extends CssComponent {
     static createIcon(iconInput) {
         let icon = null;
 
-        if (typeof iconInput === 'string' && iconInput.startsWith('<') && iconInput.endsWith('>')) {
+        if (iconInput instanceof HTMLElement) {
+            icon = iconInput;
+        } else if (typeof iconInput === 'string' && iconInput.startsWith('<') && iconInput.endsWith('>')) {
             icon = new DOMParser().parseFromString(iconInput, 'text/html').body.firstChild;
         }
         else {
