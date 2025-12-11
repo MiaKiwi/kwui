@@ -5,9 +5,12 @@ import Component from "../kwui/components/Component.mjs";
 import Anchor from "../kwui/components/controls/Anchor.mjs";
 import Button from "../kwui/components/controls/Button.mjs";
 import ButtonGroup from "../kwui/components/controls/ButtonGroup.mjs";
+import Typography from "../kwui/components/display/Typography.mjs";
 import Accordion from "../kwui/components/layout/accordion/Accordion.mjs";
 import AccordionGroup from "../kwui/components/layout/accordion/AccordionGroup.mjs";
 import Callout from "../kwui/components/layout/Callout.mjs";
+import Card from "../kwui/components/layout/card/Card.mjs";
+import CardGroup from "../kwui/components/layout/card/CardGroup.mjs";
 import BreadcrumbItem from "../kwui/components/navigation/breadcrumbs/BreadcrumbItem.mjs";
 import Breadcrumbs from "../kwui/components/navigation/breadcrumbs/Breadcrumbs.mjs";
 
@@ -118,7 +121,7 @@ let group = new ButtonGroup({
         toggle: true,
         unique: true,
         cooldown: 2000,
-        singleUse: false
+        joined: true
     }
 });
 
@@ -234,7 +237,7 @@ let importantCallout = new Callout({
         style: 'important'
     },
     children: [
-        "This is an important callout!"
+        Typography.newBoldText("Important Callout!"),
     ]
 });
 
@@ -368,3 +371,43 @@ let linkChip = new Chip({
 });
 
 app.appendChild(linkChip.render());
+
+let card = new Card({
+    children: [
+        Typography.newParagraph("This is a card!")
+    ]
+});
+
+app.appendChild(card.render());
+
+let cardGroup = new CardGroup({
+    props: {
+        orientation: 'row',
+        cards: [
+            new Card({
+                children: [
+                    new Avatar({
+                        props: {
+                            content: "C1",
+                            shape: 'circle',
+                            inline: true
+                        }
+                    }),
+                    Typography.newSpan("Card 1 in a group.")
+                ]
+            }),
+            new Card({
+                children: [
+                    Typography.newParagraph("Card 2 in a group.")
+                ]
+            }),
+            new Card({
+                children: [
+                    Typography.newParagraph("Card 3 in a group.")
+                ]
+            })
+        ]
+    }
+});
+
+app.appendChild(cardGroup.render());

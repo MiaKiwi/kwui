@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [STVP](https://mia.kiwi/projects/stvp).
 
+## [25.2.4] - 2025-12-11
+
+### Added
+
+- Typography static methods for text components
+- JSDoc comment for Chip component constructor
+- Option to 'unjoin' buttons in group
+- Card component
+- Card group component
+
+
+
 ## [25.2.3] - 2025-12-05
 
 ### Added

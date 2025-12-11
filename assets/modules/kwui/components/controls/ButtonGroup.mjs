@@ -14,6 +14,7 @@ export default class ButtonGroup extends Component {
      * @param {boolean} [params.props.unique=true] Whether only one button can be active at a time
      * @param {number} [params.props.cooldown=0] The cooldown time (in ms) after clicking a button
      * @param {boolean} [params.props.toggle=false] Whether the buttons are toggle buttons
+     * @param {boolean} [params.props.joined=true] Whether the buttons are visually joined together
      */
     constructor({
         props = {
@@ -22,7 +23,8 @@ export default class ButtonGroup extends Component {
             unique: true,
             style: 'solid',
             cooldown: 0,
-            toggle: false
+            toggle: false,
+            joined: true
         },
         ...params
     }) {
@@ -50,11 +52,12 @@ export default class ButtonGroup extends Component {
     static get cssRules() {
         return [
             `.btn-group{display:inline-flex;margin-left:var(--inline-block-spacing);margin-right:var(--inline-block-spacing);}`,
-            `.btn-group:not(.vertical) .btn:not(:first-child),.btn-group.horizontal .btn:not(:first-child){margin-left:0;border-top-left-radius:0;border-bottom-left-radius:0;}`,
-            `.btn-group:not(.vertical) .btn:not(:last-child),.btn-group.horizontal .btn:not(:last-child){margin-right:0;border-top-right-radius:0;border-bottom-right-radius:0;}`,
-            `.btn-group.vertical{flex-direction:column;}`,
-            `.btn-group.vertical .btn:not(:first-child){margin-top:0;border-top-left-radius:0;border-top-right-radius:0;}`,
-            `.btn-group.vertical .btn:not(:last-child){margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;}`
+            `.btn-group.joined:not(.vertical) .btn:not(:first-child),.btn-group.joined.horizontal .btn:not(:first-child){margin-left:0;border-top-left-radius:0;border-bottom-left-radius:0;}`,
+            `.btn-group.joined:not(.vertical) .btn:not(:last-child),.btn-group.joined.horizontal .btn:not(:last-child){margin-right:0;border-top-right-radius:0;border-bottom-right-radius:0;}`,
+            `.btn-group.joined.vertical{flex-direction:column;}`,
+            `.btn-group.joined.vertical .btn:not(:first-child){margin-top:0;border-top-left-radius:0;border-top-right-radius:0;}`,
+            `.btn-group.joined.vertical .btn:not(:last-child){margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;}`,
+            `.btn-group.vertical{flex-direction:column;}`
         ];
     }
 
@@ -69,6 +72,7 @@ export default class ButtonGroup extends Component {
         group.classList.add('btn-group');
         if (this.props.orientation) group.classList.add(this.props.orientation);
         if (this.props.style) group.classList.add(this.props.style);
+        if (this.props.joined) group.classList.add('joined');
 
         for (let button of this.props.buttons) {
             if (this.theme) button.theme = this.theme;

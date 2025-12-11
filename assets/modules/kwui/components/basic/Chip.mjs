@@ -8,7 +8,14 @@ import Fontawesome from "./icons/Fontawesome.mjs";
 export default class Chip extends Component {
     /**
      * Creates a Chip component
-     * @param {string} params.props.content The avatar content (text or HTML)
+     * @param {string} params.props.closeable Whether the chip has a close button
+     * @param {string} params.props.shape The chip shape (circular, square, rounded)
+     * @param {string} params.props.inline Whether the chip is displayed inline
+     * @param {string|HTMLElement} params.props.icon The chip icon
+     * @param {object} params.props.customColors Custom colors for the chip (bg, fg, border)
+     * @param {string} params.props.customColors.bg The custom background color
+     * @param {string} params.props.customColors.fg The custom foreground color
+     * @param {string} params.props.customColors.border The custom border color
      */
     constructor({
         props = {
