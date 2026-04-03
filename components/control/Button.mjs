@@ -1,6 +1,7 @@
 import AbstractComponent from "../AbstractComponent.mjs";
 import CSSVariables from "../core/CSSVariables.mjs";
 import Typography from "../core/Typography.mjs";
+import Icon from "../display/icons/Icon.mjs";
 
 
 
@@ -55,7 +56,8 @@ export default class Button extends AbstractComponent {
         `.btn.outline:not(.disabled):not(:disabled):active,.btn.outline.active{background-color:var(--btn-active-bg);color:var(--btn-active-fg);border-color:var(--btn-active-bg);}`,
         `.btn.empty{background-color:transparent;color:var(--btn-bg);}`,
         `.btn.empty:not(.disabled):not(:disabled):active,.btn.empty.active{background-color:var(--btn-active-bg);color:var(--btn-active-fg);}`,
-        `.btn.disabled,.btn:disabled{opacity:var(--disabled-transparency);cursor:not-allowed;transform:none;pointer-events:none;}`
+        `.btn.disabled,.btn:disabled{opacity:var(--disabled-transparency);cursor:not-allowed;transform:none;pointer-events:none;}`,
+        `.btn.icon-only{padding:0;}`
     ]
 
     render() {
@@ -64,6 +66,7 @@ export default class Button extends AbstractComponent {
         btn.classList.add("btn", this.props.style, this.themeClass);
 
         if (this.props.singleUse) btn.classList.add("single-use");
+        if (this.children.every(c=>c instanceof Icon)) btn.classList.add("icon-only");
 
         this.attachChildren(btn);
         this.attachListeners(btn);
