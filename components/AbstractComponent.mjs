@@ -18,6 +18,7 @@ export default class AbstractComponent {
         this._theme = null;
 
         this._cleanUpFunctions = [];
+        this._listeners = {};
         this._isMounted = false;
         this._instance = null;
 
@@ -84,6 +85,8 @@ export default class AbstractComponent {
 
     get id() { return this._id; }
 
+    isMounted() { return this._isMounted && this._instance; }
+
     get themeClass() { return `kw-${this.theme ? this.theme : 'default'}`; }
 
     get instance() { return this?._instance; }
@@ -92,35 +95,104 @@ export default class AbstractComponent {
     get props() { return this._props; }
     set props(props) { this.setProps(props); }
     setProps(props) {
-        let p = { ...this.constructor._defaultProps, ...props };
+        let oldProps = this._props;
+        let p = { ...this.constructor._defaultProps, ...oldProps, ...props };
 
         if (this.constructor.validateProps(p)) {
             this._props = p;
         } else {
             throw new Error(`${this.constructor.name} (${this.id}): Failed to validate props`);
         }
+
+        this.onPropsChange(oldProps);
     }
 
     get children() { return this._children; }
     set children(children) { this.setChildren(children); }
-    setChildren(children) { this._children = children; }
+    setChildren(children) {
+        this._children = [];
+        children.forEach(c => this.addChild(c));
+    }
+    hasChild(child) { return typeof child !== "string" && this.children.includes(child); }
     addChild(child, index = -1) {
+        if (child === this) throw new Error(`${this.constructor.name} (${this.id}): Cannot nest an element inside itself`);
+        if (this.hasChild(child)) return;
         if (index < 0) index = this._children.length;
 
         this._children = this._children.toSpliced(index, 0, child);
+
+        this.onChildAdded(child);
     }
     removeChild(child) {
+        if (!this.hasChild(child)) return;
+
         this._children = this._children.filter(c => c !== child);
+
+        this.onChildRemoved(child);
+    }
+
+    get listeners() { return this._listeners; }
+    addListener(event, fn) {
+        if (!this.hasListener(event, fn)) {
+            if (!this._listeners[event]) {
+                this._listeners[event] = [];
+            }
+
+            this._listeners[event].push(fn);
+
+            this.onListenerAdded(event, fn);
+        }
+    }
+    removeListener(event, fn) {
+        if (this.hasListener(event, fn)) {
+            this._listeners[event] = (this._listeners[event] ?? []).filter(l => l !== fn);
+
+            this.onListenerRemoved(event, fn);
+        }
+    }
+    hasListener(event, fn) {
+        return (
+            Object.keys(this._listeners).includes(event) &&
+            this._listeners[event].includes(fn)
+        );
     }
 
     get theme() { return this._theme; }
     set theme(theme) { this.setTheme(theme); }
     setTheme(theme) {
+        let oldTheme = this._theme;
+
         if (this.constructor._themes.includes(theme)) {
             this._theme = theme
         } else {
             throw new Error(`${this.constructor.name} (${this.id}): Failed to set theme`);
         }
+
+        this.onThemeChange(oldTheme);
+    }
+
+    onPropsChange(oldProps) {
+        if (this.isMounted() && JSON.stringify(this._props) !== JSON.stringify(oldProps)) this.remount();
+    }
+
+    onChildAdded(child) {
+        if (this.isMounted()) this.remount();
+    }
+
+    onChildRemoved(child) {
+        if (this.isMounted()) this.remount();
+    }
+
+    onThemeChange(oldTheme) {
+        if (this.isMounted()) this.remount();
+    }
+
+    onListenerAdded(event, fn) {
+        if (this.isMounted()) this.remount();
+    }
+
+    onListenerRemoved(event, fn) {
+        if (this.isMounted()) this.remount();
     }
 
     attachChildren(element, children = this.children) {
@@ -132,6 +204,15 @@ export default class AbstractComponent {
                 element.appendChild(child);
             } else if (typeof child === "string") {
                 element.appendChild(this.constructor.stringToHTML(child));
+            }
+        }
+    }
+
+    attachListeners(element, listeners = this._listeners) {
+        for (let event of Object.keys(listeners)) {
+            for (let fn of listeners[event]) {
+                element.addEventListener(event, fn);
+                this._cleanUpFunctions.push(() => { element.removeEventListener(event, fn); });
             }
         }
     }
@@ -163,6 +244,14 @@ export default class AbstractComponent {
         this.onMount();
     }
 
+    remount() {
+        if (this.isMounted()) {
+            let parent = this.parent;
+            this.unmount();
+            this.mount(parent);
+        }
+    }
+
     /**
      * Unmounts the component
      */
@@ -176,7 +265,7 @@ export default class AbstractComponent {
 
         this._instance?.remove();
         this._instance = null;
-        this.constructor.styleRegister.unregister(this.constructor);
+        // this.constructor.styleRegister.unregister(this.constructor);
         this._isMounted = false;
     }
 

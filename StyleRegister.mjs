@@ -21,11 +21,11 @@ export default class StyleRegister {
         }
     }
 
-    unregister(component) {
-        this._register.delete(component);
+    // unregister(component) {
+    //     this._register.delete(component);
 
-        this.apply()
-    }
+    //     this.apply()
+    // }
 
     isRegistered(component) {
         return this._register.has(component);

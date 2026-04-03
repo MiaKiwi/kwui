@@ -66,6 +66,7 @@ export default class Button extends AbstractComponent {
         if (this.props.singleUse) btn.classList.add("single-use");
 
         this.attachChildren(btn);
+        this.attachListeners(btn);
 
         return btn;
     }

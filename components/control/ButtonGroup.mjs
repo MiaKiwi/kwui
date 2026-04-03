@@ -61,6 +61,7 @@ export default class ButtonGroup extends AbstractComponent {
         if (this.props.unique) group.classList.add("unique")
 
         this.attachChildren(group);
+        this.attachListeners(group);
 
         return group;
     }

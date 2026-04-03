@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [STVP](https://mia.kiwi/projects/stvp).
 
+## [26.3.1] - 2026-04-03
+
+### Added
+
+- Event listening system for components. Automatically added and removed
+- Event listeners and rerenders for changes in props, theming, children, and event listeners
+
+### Removed
+
+- `unregister` method of `StyleRegister` to avoid removing styling of components still in use. Will add again later
+
+
+
 ## [26.3.0] - 2026-04-02
 
 ### Added
