@@ -55,11 +55,13 @@ export default class Chip extends AbstractComponent {
     static dependencies = [CSSVariables, FontawesomeIcon];
 
     static _rawStylingRules = [
-        `.chip{--chip-font-size:0.75em;--chip-border-radius:var(--border-roundness);--chip-bg:var(--primary-90);--chip-fg:var(--primary-10);--chip-border:var(--primary);display:flex;align-items:center;gap:var(--letter-spacing);padding:var(--padding-xs) var(--padding-md);background-color:var(--chip-bg);color:var(--chip-fg);border:var(--border-thin-width) solid var(--chip-border);border-radius:var(--chip-border-radius);box-shadow:var(--box-shadow);width:max-content;margin:var(--padding-xs);font-size:var(--chip-font-size);}`,
+        `.chip{--chip-font-size:0.75em;--chip-border-radius:var(--border-roundness);--chip-bg:var(--primary-90);--chip-fg:var(--primary-10);--chip-border:var(--primary);display:grid;grid-auto-flow: column;align-items:center;gap:var(--letter-spacing);padding:var(--padding-xs) var(--padding-md);background-color:var(--chip-bg);color:var(--chip-fg);border:var(--border-thin-width) solid var(--chip-border);border-radius:var(--chip-border-radius);box-shadow:var(--box-shadow);width:max-content;margin:var(--padding-xs);font-size:var(--chip-font-size);}`,
+        `.chip:has(.close-btn){grid-template-areas: "content close-btn";}`,
+        `.chip .close-btn{grid-area:close-btn}`,
         `.chip.circular{--chip-border-radius:9999em;}`,
         `.chip.square{--chip-border-radius:0;}`,
         `.chip.rounded{--chip-border-radius:0.5em;}`,
-        `.chip.inline{display:inline-flex;margin:0;;margin-left:var(--inline-block-spacing);}`,
+        `.chip.inline{display:inline-grid;margin:0;margin-left:var(--inline-block-spacing);}`,
         `.chip.kw-{{theme}}{--chip-bg:var(--{{theme}}-90);--chip-fg:var(--{{theme}}-10);--chip-border:var(--{{theme}});}`
     ]
 
@@ -97,11 +99,12 @@ export default class Chip extends AbstractComponent {
                     }
                 });
                 chip.dispatchEvent(event);
-                
+
                 this.unmount();
             });
 
             close.mount(chip);
+            close.i().classList.add("close-btn")
         }
 
         return chip;

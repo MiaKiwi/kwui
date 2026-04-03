@@ -110,10 +110,11 @@ export default class AbstractComponent {
     get children() { return this._children; }
     set children(children) { this.setChildren(children); }
     setChildren(children) {
+        this._children.forEach(c => this.removeChild(c));
         this._children = [];
         children.forEach(c => this.addChild(c));
     }
-    hasChild(child) { return typeof child !== "string" && this.children.includes(child); }
+    hasChild(child) { return this.children.includes(child); }
     addChild(child, index = -1) {
         if (child === this) throw new Error(`${this.constructor.name} (${this.id}): Cannot nest an element inside itself`);
         if (this.hasChild(child)) return;
@@ -176,11 +177,32 @@ export default class AbstractComponent {
     }
 
     onChildAdded(child) {
-        if (this.isMounted()) this.remount();
+        if (this.isMounted()) {
+            if (child instanceof AbstractComponent) {
+                child.unmount();
+                child.mount(this.i());
+            } else if (child instanceof HTMLElement) {
+                this.childrenContainer().appendChild(child);
+            } else if (typeof child === "string") {
+                this.childrenContainer().appendChild(this.constructor.stringToHTML(child));
+            }
+        };
     }
 
     onChildRemoved(child) {
-        if (this.isMounted()) this.remount();
+        if (this.isMounted()) {
+            if (child instanceof AbstractComponent) {
+                child.unmount();
+            } else if (child instanceof HTMLElement) {
+                child.remove();
+            } else {
+                Array.from(this.childrenContainer()?.childNodes)?.forEach(node => {
+                    if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() === child.trim()) {
+                        node.remove();
+                    }
+                });
+            }
+        }
     }
 
     onThemeChange(oldTheme) {
@@ -217,6 +239,7 @@ export default class AbstractComponent {
         }
     }
 
+    childrenContainer() { return this.i(); }
     i() { return this?.instance; }
     $(selector) { return this?.parent?.querySelector(selector); }
     $$(selector) { return this?.parent?.querySelectorAll(selector); }
