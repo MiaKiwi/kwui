@@ -3,9 +3,8 @@ import CSSVariables from "./CSSVariables.mjs";
 
 
 
-export default class Body extends AbstractComponent {
+export default class Layout extends AbstractComponent {
     static _rawStylingRules = [
-        `*,*::before,*::after {box-sizing: border-box;}`,
         `body{background-color:var(--bg);}`,
         `body,html{margin:0;padding:0;scroll-behavior:smooth;}`,
         `body{min-height:100vh;display:grid;}`,

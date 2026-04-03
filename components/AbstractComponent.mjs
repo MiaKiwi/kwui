@@ -301,6 +301,7 @@ export default class AbstractComponent {
     static _themes = [
         'bg',
         'fg',
+        'text',
         'primary',
         'secondary',
         'accent',
