@@ -14,6 +14,11 @@ export default class Button extends AbstractComponent {
      * @param {boolean} props.singleUse
      * @param {boolean} props.toggle
      * @param {object} props.activeChildren
+     * @param {string} props.type
+     * @param {boolean} props.autofocus
+     * @param {string} props.popovertarget
+     * @param {string} props.popovertargetaction
+     * @param {string} props.name
      * @param {string[]|HTMLElement[]|AbstractElement[]} children Component children
      * @param {string} theme Component color theme
      * @param {string} id Component ID
@@ -28,12 +33,23 @@ export default class Button extends AbstractComponent {
         empty: 'empty'
     }
 
+    static types = {
+        button: "button",
+        reset: "reset",
+        submit: "submit"
+    }
+
     static _defaultProps = {
         style: this.styles.solid,
         cooldown: 0,
         singleUse: false,
         toggle: false,
-        activeChildren: null
+        activeChildren: null,
+        autofocus: false,
+        popovertarget: null,
+        popovertargetaction: null,
+        name: null,
+        type: this.types.button
     }
 
     static validateProps(props) {
@@ -41,7 +57,12 @@ export default class Button extends AbstractComponent {
             Object.values(this.styles).includes(props.style) &&
             typeof props.cooldown === 'number' && props.cooldown >= 0 &&
             typeof props.singleUse === 'boolean' &&
-            typeof props.toggle === 'boolean'
+            typeof props.toggle === 'boolean' &&
+            typeof props.autofocus === 'boolean' &&
+            (props.popovertarget === null || typeof props.popovertarget === 'string') &&
+            (props.popovertargetaction === null || typeof props.popovertargetaction === 'string') &&
+            (props.name === null || typeof props.name === 'string') &&
+            (props.type === null || (typeof props.type === 'string' && Object.values(this.types).includes(props.type)))
         )
     }
 
@@ -57,16 +78,21 @@ export default class Button extends AbstractComponent {
         `.btn.empty{background-color:transparent;color:var(--btn-bg);}`,
         `.btn.empty:not(.disabled):not(:disabled):active,.btn.empty.active{background-color:var(--btn-active-bg);color:var(--btn-active-fg);}`,
         `.btn.disabled,.btn:disabled{opacity:var(--disabled-transparency);cursor:not-allowed;transform:none;pointer-events:none;}`,
-        `.btn.icon-only{padding:0;}`
+        `.btn.icon-only{--btn-pad-v: var(--padding-xs);--btn-pad-h: var(--padding-xs);}`
     ]
 
     render() {
         let btn = document.createElement("button");
 
-        btn.classList.add("btn", this.props.style, this.themeClass);
+        btn.classList.add("btn", this.props.style, this.themeClass());
 
-        if (this.props.singleUse) btn.classList.add("single-use");
-        if (this.children.every(c=>c instanceof Icon)) btn.classList.add("icon-only");
+        if (this.props.autofocus) btn.setAttribute("autofocus", this.props.autofocus);
+        if (this.props.popovertarget) btn.setAttribute("popovertarget", this.props.popovertarget);
+        if (this.props.popovertargetaction) btn.setAttribute("popovertargetaction", this.props.popovertargetaction);
+        if (this.props.name) btn.setAttribute("name", this.props.name);
+        if (this.props.type) btn.setAttribute("type", this.props.type);
+
+        if (this.children.every(c => c instanceof Icon)) btn.classList.add("icon-only");
 
         this.attachChildren(btn);
         this.attachListeners(btn);
@@ -74,51 +100,65 @@ export default class Button extends AbstractComponent {
         return btn;
     }
 
+    onChildAdded(child) {
+        super.onChildAdded(child);
 
+        if (this.isMounted()) {
+            let i = this.i();
+            i.classList.remove("icon-only");
+            if (this.children.every(c => c instanceof Icon)) i.classList.add("icon-only");
+        }
+    }
+
+    onChildRemoved(child) {
+        super.onChildRemoved(child);
+
+        if (this.isMounted()) {
+            let i = this.i();
+            i.classList.remove("icon-only");
+            if (this.children.every(c => c instanceof Icon)) i.classList.add("icon-only");
+        }
+    }
+
+    onPropsChange(oldProps) {
+        if (this.isMounted() && JSON.stringify(this._props) !== JSON.stringify(oldProps)) {
+            let btn = this.i();
+
+            [
+                "autofocus",
+                "popovertarget",
+                "popovertargetaction",
+                "name",
+                "type",
+            ].forEach(p => {
+                if (oldProps[p] !== this.props[p]) {
+                    if (this.props[p] !== null) {
+                        btn.setAttribute(p, this.props[p]);
+                    } else {
+                        btn.removeAttribute(p);
+                    }
+                }
+            });
+        };
+    }
 
     bindEvents() {
         let btn = this.i();
 
-        if (this.props.cooldown) {
-            let cooldownCallback = async () => {
-                btn.disabled = true;
-                await new Promise(resolve => setTimeout(resolve, this.props.cooldown));
-                if (!this.props.singleUse) btn.disabled = false;
-            }
-            btn.addEventListener("click", cooldownCallback);
-
-            this._cleanUpFunctions.push(() => { btn.removeEventListener("click", cooldownCallback) });
-        }
-
-        if (this.props.singleUse) {
-            let singleUseCallback = async () => {
+        let componentCallback = async (e) => {
+            if (e.type === 'click' && this.props.singleUse) {
                 btn.disabled = true;
             }
-            btn.addEventListener("click", singleUseCallback);
 
-            this._cleanUpFunctions.push(() => { btn.removeEventListener("click", singleUseCallback) });
-        }
-
-        if (this.props.toggle) {
-            let toggleCallback = async () => {
+            if (e.type === 'click' && this.props.toggle) {
                 btn.classList.toggle("active");
             }
-            btn.addEventListener("click", toggleCallback);
 
-            this._cleanUpFunctions.push(() => { btn.removeEventListener("click", toggleCallback) });
-        }
-
-        if (this.props.activeChildren) {
-            let showActiveChildrenCallback = async (e) => {
+            if (this.props.activeChildren) {
                 if (e.key === 'Enter' || e.key === ' ' || e.type === 'pointerdown') {
                     btn.innerHTML = null;
                     this.attachChildren(btn, this.props.activeChildren);
                 }
-            }
-            btn.addEventListener("pointerdown", showActiveChildrenCallback);
-            btn.addEventListener("keydown", showActiveChildrenCallback);
-
-            let hideActiveChildrenCallback = async (e) => {
                 if ((e.key === 'Enter' || e.key === ' ' || e.type === 'pointerup')) {
                     if (this.props.toggle && !btn.classList.contains("active")) {
                         return;
@@ -127,13 +167,24 @@ export default class Button extends AbstractComponent {
                     this.attachChildren(btn);
                 }
             }
-            btn.addEventListener("pointerup", hideActiveChildrenCallback);
-            btn.addEventListener("keyup", hideActiveChildrenCallback);
 
-            this._cleanUpFunctions.push(() => { btn.removeEventListener("pointerdown", showActiveChildrenCallback) });
-            this._cleanUpFunctions.push(() => { btn.removeEventListener("keydown", showActiveChildrenCallback) });
-            this._cleanUpFunctions.push(() => { btn.removeEventListener("pointerup", hideActiveChildrenCallback) });
-            this._cleanUpFunctions.push(() => { btn.removeEventListener("keyup", hideActiveChildrenCallback) });
+            if (e.type === 'click' && this.props.cooldown) {
+                btn.disabled = true;
+                await new Promise(resolve => setTimeout(resolve, this.props.cooldown));
+                if (!this.props.singleUse) btn.disabled = false;
+            }
         }
+
+        btn.addEventListener("pointerdown", componentCallback);
+        btn.addEventListener("keydown", componentCallback);
+        btn.addEventListener("pointerup", componentCallback);
+        btn.addEventListener("keyup", componentCallback);
+        btn.addEventListener("click", componentCallback);
+
+        this._cleanUpFunctions.push(() => { btn.removeEventListener("pointerdown", componentCallback) })
+        this._cleanUpFunctions.push(() => { btn.removeEventListener("keydown", componentCallback) })
+        this._cleanUpFunctions.push(() => { btn.removeEventListener("pointerup", componentCallback) })
+        this._cleanUpFunctions.push(() => { btn.removeEventListener("keyup", componentCallback) })
+        this._cleanUpFunctions.push(() => { btn.removeEventListener("click", componentCallback) })
     }
 }

@@ -87,13 +87,12 @@ export default class AbstractComponent {
 
     isMounted() { return this._isMounted && this._instance; }
 
-    get themeClass() { return `kw-${this.theme ? this.theme : 'default'}`; }
+    themeClass(theme = this.theme) { return `kw-${theme ? theme : 'default'}`; }
 
     get instance() { return this?._instance; }
     get parent() { return this?._instance?.parentElement; }
 
     get props() { return this._props; }
-    set props(props) { this.setProps(props); }
     setProps(props) {
         let oldProps = this._props;
         let p = { ...this.constructor._defaultProps, ...oldProps, ...props };
@@ -206,7 +205,12 @@ export default class AbstractComponent {
     }
 
     onThemeChange(oldTheme) {
-        if (this.isMounted()) this.remount();
+        if (this.isMounted()) {
+            let i = this.i();
+
+            i.classList.remove(this.themeClass(oldTheme));
+            i.classList.add(this.themeClass());
+        };
     }
 
     onListenerAdded(event, fn) {

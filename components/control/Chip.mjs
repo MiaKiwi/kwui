@@ -68,7 +68,7 @@ export default class Chip extends AbstractComponent {
     render() {
         let chip = document.createElement("div");
 
-        chip.classList.add("chip", this.props.shape, this.themeClass);
+        chip.classList.add("chip", this.props.shape, this.themeClass());
         if (this.props.inline) chip.classList.add("inline");
         if (this.props.colors.bg && this.props.colors.fg) {
             chip.style.setProperty("--chip-bg", this.props.colors.bg);

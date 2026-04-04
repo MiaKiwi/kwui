@@ -55,7 +55,7 @@ export default class ButtonGroup extends AbstractComponent {
     render() {
         let group = document.createElement("div");
 
-        group.classList.add("btn-group", this.props.orientation, this.themeClass);
+        group.classList.add("btn-group", this.props.orientation, this.themeClass());
 
         if (this.props.joined) group.classList.add("joined")
         if (this.props.unique) group.classList.add("unique")

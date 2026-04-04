@@ -135,7 +135,7 @@ export default class FontawesomeIcon extends Icon {
     render() {
         let i = document.createElement("i");
 
-        i.classList.add("icon", `fa-${this.props.name}`, "fa-icon", this.themeClass);
+        i.classList.add("icon", `fa-${this.props.name}`, "fa-icon", this.themeClass());
         if (this.props.inline) i.classList.add(`inline`);
         if (this.props.style) i.classList.add(`fa-${this.props.style}`);
         if (this.props.family) i.classList.add(`fa-${this.props.family}`);

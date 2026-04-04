@@ -78,7 +78,7 @@ export default class Anchor extends AbstractComponent {
     render() {
         let anchor = document.createElement("a");
 
-        anchor.classList.add("anchor", this.themeClass);
+        anchor.classList.add("anchor", this.themeClass());
         if (this.props.download) anchor.setAttribute("download", this.props.download);
         if (this.props.type) anchor.setAttribute("type", this.props.type);
         if (this.props.href) anchor.setAttribute("href", this.props.href);
