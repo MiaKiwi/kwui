@@ -10,6 +10,7 @@ export default class Button extends AbstractComponent {
      * Creates a new component
      * @param {object} props Component properties
      * @param {string} props.style
+     * @param {string} props.shape
      * @param {number} props.cooldown
      * @param {boolean} props.singleUse
      * @param {boolean} props.toggle
@@ -39,8 +40,15 @@ export default class Button extends AbstractComponent {
         submit: "submit"
     }
 
+    static shapes = {
+        circular: 'circular',
+        square: 'square',
+        rounded: 'rounded'
+    }
+
     static _defaultProps = {
         style: this.styles.solid,
+        shape: this.shapes.rounded,
         cooldown: 0,
         singleUse: false,
         toggle: false,
@@ -55,6 +63,7 @@ export default class Button extends AbstractComponent {
     static validateProps(props) {
         return (
             Object.values(this.styles).includes(props.style) &&
+            Object.values(this.shapes).includes(props.shape) &&
             typeof props.cooldown === 'number' && props.cooldown >= 0 &&
             typeof props.singleUse === 'boolean' &&
             typeof props.toggle === 'boolean' &&
@@ -69,7 +78,7 @@ export default class Button extends AbstractComponent {
     static dependencies = [Typography, CSSVariables];
 
     static _rawStylingRules = [
-        `.btn{--btn-pad-v:var(--padding-sm);--btn-pad-h:var(--padding-md);--btn-interact-translateY:0.1em;--btn-bg:var(--primary);--btn-fg:var(--primary-fg);--btn-active-bg:var(--primary-10);--btn-active-fg:var(--primary-90);background-color:var(--btn-bg);color:var(--btn-fg);display:inline-block;padding:var(--btn-pad-v) var(--btn-pad-h);text-decoration:none;border-radius:var(--border-roundness);transition:all 0.2s ease-in-out;border:none;cursor:pointer;user-select:none;margin-top:0.1em;margin-bottom:0.1em;margin-left:var(--inline-block-spacing);margin-right:var(--inline-block-spacing);}`,
+        `.btn{--btn-pad-v:var(--padding-sm);--btn-pad-h:var(--padding-md);--border-radius:var(--border-roundness);--btn-interact-translateY:0.1em;--btn-bg:var(--primary);--btn-fg:var(--primary-fg);--btn-active-bg:var(--primary-10);--btn-active-fg:var(--primary-90);background-color:var(--btn-bg);color:var(--btn-fg);display:inline-block;padding:var(--btn-pad-v) var(--btn-pad-h);text-decoration:none;border-radius:var(--border-radius);transition:all 0.2s ease-in-out;border:none;cursor:pointer;user-select:none;margin-top:0.1em;margin-bottom:0.1em;margin-left:var(--inline-block-spacing);margin-right:var(--inline-block-spacing);}`,
         `.btn:hover,.btn:focus{transform:translateY(calc(-1 * var(--btn-interact-translateY)));}`,
         `.btn:not(.disabled):not(:disabled):active,.btn.active{background-color:var(--btn-active-bg);color:var(--btn-active-fg);transform:translateY(var(--btn-interact-translateY));}`,
         `.btn.kw-{{theme}}{--btn-bg:var(--{{theme}});--btn-fg:var(--{{theme}}-fg);--btn-active-bg:var(--{{theme}}-10);--btn-active-fg:var(--{{theme}}-90);}`,
@@ -78,13 +87,16 @@ export default class Button extends AbstractComponent {
         `.btn.empty{background-color:transparent;color:var(--btn-bg);}`,
         `.btn.empty:not(.disabled):not(:disabled):active,.btn.empty.active{background-color:var(--btn-active-bg);color:var(--btn-active-fg);}`,
         `.btn.disabled,.btn:disabled{opacity:var(--disabled-transparency);cursor:not-allowed;transform:none;pointer-events:none;}`,
-        `.btn.icon-only{--btn-pad-v: var(--padding-xs);--btn-pad-h: var(--padding-xs);}`
+        `.btn.icon-only{--btn-pad-v: var(--padding-xs);--btn-pad-h: var(--padding-xs);}`,
+        `.btn.circular{--border-radius:9999em;}`,
+        `.btn.square{--border-radius:0;}`,
+        `.btn.rounded{--border-radius:0.5em;}`,
     ]
 
     render() {
         let btn = document.createElement("button");
 
-        btn.classList.add("btn", this.props.style, this.themeClass());
+        btn.classList.add("btn", this.props.shape, this.props.style, this.themeClass());
 
         if (this.props.autofocus) btn.setAttribute("autofocus", this.props.autofocus);
         if (this.props.popovertarget) btn.setAttribute("popovertarget", this.props.popovertarget);
@@ -123,6 +135,17 @@ export default class Button extends AbstractComponent {
     onPropsChange(oldProps) {
         if (this.isMounted() && JSON.stringify(this._props) !== JSON.stringify(oldProps)) {
             let btn = this.i();
+
+            if (oldProps.shape !== this.props.shape) {
+                btn.classList.remove(oldProps.shape);
+                btn.classList.add(this.props.shape);
+            }
+            if (oldProps.style !== this.props.style) {
+                console.log("style");
+
+                btn.classList.remove(oldProps.style);
+                btn.classList.add(this.props.style);
+            }
 
             [
                 "autofocus",

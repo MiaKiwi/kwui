@@ -82,7 +82,8 @@ export default class Chip extends AbstractComponent {
         if (this.props.dismissable) {
             let close = new Button({
                 style: Button.styles.empty,
-                singleUse: true
+                singleUse: true,
+                shape: Button.shapes.circular
             }, [
                 new FontawesomeIcon({
                     name: "xmark",
