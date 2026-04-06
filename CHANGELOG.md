@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [STVP](https://mia.kiwi/projects/stvp).
 
+## [26.3.10] - 2026-04-06
+
+### Added
+
+- `onCreation` method to `AbstractComponent`, called when new instance is, well..., instantiated
+- `clone` method to `AbstractComponent` to make a deep clone of a component
+- `isHTMLCompatible` to check if an input is HTML-ish
+- Accordion
+- Accordion group
+- Style dependency to breadcrumbs component
+
+### Removed
+
+- Stray `console.log` in button component
+
+
+
 ## [26.3.9] - 2026-04-06
 
 ### Added

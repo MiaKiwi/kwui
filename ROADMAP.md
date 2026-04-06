@@ -26,8 +26,8 @@ These features are inspired mostly by previous versions of KWUI, and [Material U
   - [x] Card group
   - [x] Card footer
   - [ ] Card header
-  - [ ] Accordion
-  - [ ] Accordion group
+  - [x] Accordion
+  - [x] Accordion group
   - [ ] Hero
   - [ ] Header
   - [ ] Dialog/modal

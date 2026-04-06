@@ -1,8 +1,9 @@
 import AbstractComponent from "../AbstractComponent.mjs";
+import CSSVariables from "../core/CSSVariables.mjs";
 
 
 
-export default class Breadcrumbs extends AbstractComponent  {
+export default class Breadcrumbs extends AbstractComponent {
     /**
      * Creates a new component
      * @param {object} props Component properties
@@ -20,6 +21,8 @@ export default class Breadcrumbs extends AbstractComponent  {
     static validateProps(props) {
         return super.validateProps(props);
     }
+
+    static dependencies = [CSSVariables];
 
     static _rawStylingRules = [
         `.breadcrumbs{list-style:none;display:flex;flex-wrap:wrap;gap:var(--letter-spacing);padding:var(--padding-sm);margin:0;}`,

@@ -25,6 +25,8 @@ export default class AbstractComponent {
         this.setProps(props);
         this.setChildren(children);
         this.setTheme(theme);
+
+        this.onCreation();
     }
 
     /**
@@ -36,6 +38,22 @@ export default class AbstractComponent {
         let parser = new DOMParser();
         let doc = parser.parseFromString(stringHTML, 'text/html');
         return doc.body.firstChild;
+    }
+
+    /**
+     * Checks if an input can be converted to an HTML element
+     * 
+     * Ignores text nodes
+     * 
+     * @param {string|HTMLElement|AbstractComponent} element 
+     * @returns {boolean}
+     */
+    static isHTMLCompatible(element) {
+        return (
+            element instanceof HTMLElement ||
+            element instanceof AbstractComponent ||
+            (typeof element === "string" && element.startsWith("<") && element.endsWith(">"))
+        );
     }
 
     static __cachedStylingRulesMap = new WeakMap();
@@ -171,6 +189,22 @@ export default class AbstractComponent {
         this.onThemeChange(oldTheme);
     }
 
+    clone() {
+        let clonedChildren = this._children.map(child => {
+            if (child instanceof AbstractComponent) {
+                return child.clone();
+            }
+            return child;
+        });
+
+        return new this.constructor(
+            { ...this._props },
+            clonedChildren,
+            this._theme,
+            null
+        );
+    }
+
     onPropsChange(oldProps) {
         if (this.isMounted() && JSON.stringify(this._props) !== JSON.stringify(oldProps)) this.remount();
     }
@@ -232,6 +266,21 @@ export default class AbstractComponent {
                 element.appendChild(this.constructor.stringToHTML(child));
             }
         }
+    }
+
+    detachChildren(element) {
+        [
+            ...element.children,
+            ...element.childNodes
+        ].forEach(c => {
+            if (c instanceof AbstractComponent) {
+                c.unmount();
+            } else {
+                c.remove();
+            }
+        });
+
+        element.innerHTML = "";
     }
 
     attachListeners(element, listeners = this._listeners) {
@@ -338,6 +387,8 @@ export default class AbstractComponent {
     render() { }
 
     bindEvents() { }
+
+    onCreation() { }
 
     onMount() { }
 

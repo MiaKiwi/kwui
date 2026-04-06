@@ -141,8 +141,6 @@ export default class Button extends AbstractComponent {
                 btn.classList.add(this.props.shape);
             }
             if (oldProps.style !== this.props.style) {
-                console.log("style");
-
                 btn.classList.remove(oldProps.style);
                 btn.classList.add(this.props.style);
             }
