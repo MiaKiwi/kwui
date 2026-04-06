@@ -70,8 +70,7 @@ export default class Anchor extends AbstractComponent {
     }
 
     static _rawStylingRules = [
-        `.anchor{text-decoration:none;cursor:pointer;}`,
-        `.anchor:hover,.anchor:focus,.anchor:active{text-decoration:underline;}`,
+        `.anchor{cursor:pointer;}`,
         `.anchor.kw-{{theme}}{color:var(--{{theme}});}.anchor.kw-{{theme}}:visited,.anchor.kw-{{theme}}:active,.anchor.kw-{{theme}}:hover,.anchor.kw-{{theme}}:focus{color:var(--{{theme}}-50);}`
     ]
 

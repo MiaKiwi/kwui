@@ -68,7 +68,6 @@ export default class Text extends AbstractComponent {
     render() {
         let text = document.createElement(this._elementTagName ?? "span");
 
-        if (this.theme) text.classList.add(`text-${this.theme}`);
         if (this.props.size) text.classList.add(`text-${this.props.size}`);
         if (this.props.font) text.classList.add(`text-${this.props.font}`);
         if (this.props.align) text.classList.add(`text-${this.props.align}`);
@@ -80,5 +79,18 @@ export default class Text extends AbstractComponent {
         this.attachListeners(text);
 
         return text;
+    }
+
+    onPropsChange(oldProps) {
+        if (this.isMounted() && JSON.stringify(this._props) !== JSON.stringify(oldProps)) {
+            let el = this.i();
+
+            if (oldProps.size !== this.props.size) el.classList.remove(`text-${oldProps.size}`); if (this.props.size) el.classList.add(`text-${this.props.size}`);
+            if (oldProps.font !== this.props.font) el.classList.remove(`text-${oldProps.font}`); if (this.props.font) el.classList.add(`text-${this.props.font}`);
+            if (oldProps.align !== this.props.align) el.classList.remove(`text-${oldProps.align}`); if (this.props.align) el.classList.add(`text-${this.props.align}`);
+            oldProps.muted !== this.props.muted && this.props.muted ? el.classList.add(`text-muted`) : el.classList.remove(`text-muted`);
+            oldProps.italic !== this.props.italic && this.props.italic ? el.classList.add(`text-italic`) : el.classList.remove(`text-italic`);
+            oldProps.bold !== this.props.bold && this.props.bold ? el.classList.add(`text-strong`) : el.classList.remove(`text-strong`);
+        }
     }
 }

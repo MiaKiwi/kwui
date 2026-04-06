@@ -17,7 +17,7 @@ These features are inspired mostly by previous versions of KWUI, and [Material U
   - [x] Chip
 - [ ] Navigation
   - [x] Anchor
-  - [ ] Breadcrumbs
+  - [x] Breadcrumbs
   - [ ] Drawer
   - [ ] Navigation bar
   - [ ] Scrollable table of contents
