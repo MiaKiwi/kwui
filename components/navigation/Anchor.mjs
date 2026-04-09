@@ -29,7 +29,17 @@ export default class Anchor extends AbstractComponent {
         if (this.isMounted() && JSON.stringify(this._props) !== JSON.stringify(oldProps)) {
             let a = this.i();
 
-            Object.keys(this.constructor._defaultProps).forEach(p => {
+            [
+                "download",
+                "type",
+                "href",
+                "hreflang",
+                "referrerpolicy",
+                "rel",
+                "target",
+                "media",
+                "ping",
+            ].forEach(p => {
                 if (oldProps[p] !== this.props[p]) {
                     if (this.props[p] !== null) {
                         a.setAttribute(p, this.props[p]);
@@ -37,13 +47,16 @@ export default class Anchor extends AbstractComponent {
                         a.removeAttribute(p);
                     }
                 }
-            })
+            });
+
+            oldProps.subtle !== this.props.subtle && this.props.subtle ? a.classList.add("subtle") : a.classList.remove("subtle");
         }
     }
 
     static _defaultProps = {
         download: null,
         type: null,
+        subtle: false,
 
         href: "#",
         hreflang: null,
@@ -65,12 +78,15 @@ export default class Anchor extends AbstractComponent {
             props.rel === null || typeof props.rel === "string" &&
             props.target === null || typeof props.target === "string" &&
             props.media === null || typeof props.media === "string" &&
-            props.ping === null || typeof props.ping === "string"
+            props.ping === null || typeof props.ping === "string" &&
+            typeof props.subtle === "boolean"
         )
     }
 
     static _rawStylingRules = [
         `.anchor{cursor:pointer;}`,
+        `.anchor.subtle{text-decoration:none;}`,
+        `.anchor:hover,.anchor:active,.anchor:focus{text-decoration:underline;}`,
         `.anchor.kw-{{theme}}{color:var(--{{theme}});}.anchor.kw-{{theme}}:visited,.anchor.kw-{{theme}}:active,.anchor.kw-{{theme}}:hover,.anchor.kw-{{theme}}:focus{color:var(--{{theme}}-50);}`
     ]
 
@@ -78,6 +94,7 @@ export default class Anchor extends AbstractComponent {
         let anchor = document.createElement("a");
 
         anchor.classList.add("anchor", this.themeClass());
+        if (this.props.subtle) anchor.classList.add("subtle");
         if (this.props.download) anchor.setAttribute("download", this.props.download);
         if (this.props.type) anchor.setAttribute("type", this.props.type);
         if (this.props.href) anchor.setAttribute("href", this.props.href);

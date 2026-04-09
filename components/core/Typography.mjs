@@ -9,7 +9,7 @@ export default class Typography extends AbstractComponent {
         `:root{--font-sans:'Noto Sans', sans-serif;--font-serif:'Noto Serif', serif;--font-mono:'Noto Sans Mono', monospace;--font-weight-light:300;--font-weight-regular:400;--font-weight-medium:500;--font-weight-bold:700;--font-family:var(--font-sans), var(--font-serif), var(--font-mono);}`,
         `html,body{font-variant-numeric:slashed-zero;font-family:var(--font-family);font-weight:var(--font-weight-regular);font-size:100%;line-height:1.5;color:var(--text);}`,
         `.text-{{theme}}{color:var(--{{theme}});}`,
-        `.text-size-normal{font-size:100%;}`,
+        `.text-md{font-size:100%;}`,
         `h1,h2,h3,h4,h5,h6,.text-h1,.text-h2,.text-h3,.text-h4,.text-h5,.text-h6{font-weight:var(--font-weight-bold);}`,
         `h1,.text-h1,.text-huge{font-size:2.489em;}`,
         `h2,.text-h2,.text-xxxl{font-size:2.074em;}`,

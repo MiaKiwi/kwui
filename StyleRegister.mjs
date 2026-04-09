@@ -31,6 +31,22 @@ export default class StyleRegister {
         return this._register.has(component);
     }
 
+    static themes = {
+        fg: "fg",
+        bg: "bg",
+        text: "text",
+        primary: "primary",
+        secondary: "secondary",
+        accent: "accent",
+        info: "info",
+        positive: "positive",
+        success: "positive",
+        warning: "warning",
+        negative: "negative",
+        error: "negative",
+        danger: "negative"
+    }
+
     apply() {
         let rules = [];
 

@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [STVP](https://mia.kiwi/projects/stvp).
 
+## [26.3.11] - 2026-04-09
+
+### Added
+
+- `themes` static property to `StyleRegister` to easily access themes
+- Built-in plus/minus accordion summary. Show a plus sign when closed and a minus sign when opened
+- 'Subtle' variant to anchors where text isn't underlined unless hovered, active, or focused
+- Avatar
+
+### Changed
+
+- `text-size-normal` to `text-md`
+- Added actual props change handling to Fontawesome icons, instead of rerendering the whole thing
+
+
+
 ## [26.3.10] - 2026-04-06
 
 ### Added

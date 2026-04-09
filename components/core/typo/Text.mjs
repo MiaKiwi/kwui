@@ -26,7 +26,7 @@ export default class Text extends AbstractComponent {
         xxl: 'xxl',
         xl: 'xl',
         l: 'l',
-        normal: 'size-normal',
+        md: 'md',
         s: 's'
     }
 

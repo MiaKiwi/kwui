@@ -32,7 +32,7 @@ These features are inspired mostly by previous versions of KWUI, and [Material U
   - [ ] Header
   - [ ] Dialog/modal
 - [ ] Display
-  - [ ] Avatar
+  - [x] Avatar
   - [ ] Avatar group
   - [x] Icons
   - [ ] Carousel
