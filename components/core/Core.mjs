@@ -10,7 +10,8 @@ export default class Core extends AbstractComponent {
     static _rawStylingRules = [
         `*,*::before,*::after {box-sizing: border-box}`,
         `.block-center{display:block;margin-left:auto;margin-right:auto}`,
-        `.full-width{width:100%}`
+        `.full-width{width:100%}`,
+        `.stretch-width{width:100%;width:stretch}`
     ];
 
     static dependencies = [CSSVariables, Animations, Typography, Layout];

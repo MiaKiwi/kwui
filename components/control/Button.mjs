@@ -20,6 +20,8 @@ export default class Button extends AbstractComponent {
      * @param {string} props.popovertarget
      * @param {string} props.popovertargetaction
      * @param {string} props.name
+     * @param {string} props.command
+     * @param {string} props.commandFor
      * @param {string[]|HTMLElement[]|AbstractElement[]} children Component children
      * @param {string} theme Component color theme
      * @param {string} id Component ID
@@ -57,7 +59,9 @@ export default class Button extends AbstractComponent {
         popovertarget: null,
         popovertargetaction: null,
         name: null,
-        type: this.types.button
+        type: this.types.button,
+        command: null,
+        commandFor: null
     }
 
     static validateProps(props) {
@@ -71,14 +75,16 @@ export default class Button extends AbstractComponent {
             (props.popovertarget === null || typeof props.popovertarget === 'string') &&
             (props.popovertargetaction === null || typeof props.popovertargetaction === 'string') &&
             (props.name === null || typeof props.name === 'string') &&
-            (props.type === null || (typeof props.type === 'string' && Object.values(this.types).includes(props.type)))
+            (props.type === null || (typeof props.type === 'string' && Object.values(this.types).includes(props.type))) &&
+            (props.command === null || typeof props.command === 'string') &&
+            (props.commandFor === null || typeof props.commandFor === 'string')
         )
     }
 
     static dependencies = [Typography, CSSVariables];
 
     static _rawStylingRules = [
-        `.btn{--btn-pad-v:var(--padding-sm);--btn-pad-h:var(--padding-md);--border-radius:var(--border-roundness);--btn-interact-translateY:0.1em;--btn-bg:var(--primary);--btn-fg:var(--primary-fg);--btn-active-bg:var(--primary-10);--btn-active-fg:var(--primary-90);background-color:var(--btn-bg);color:var(--btn-fg);display:inline-block;padding:var(--btn-pad-v) var(--btn-pad-h);text-decoration:none;border-radius:var(--border-radius);transition:all 0.2s ease-in-out;border:none;cursor:pointer;user-select:none;margin-top:0.1em;margin-bottom:0.1em;margin-left:var(--inline-block-spacing);margin-right:var(--inline-block-spacing)}`,
+        `.btn{--btn-pad-v:var(--padding-sm);--btn-pad-h:var(--padding-md);--border-radius:var(--border-roundness);--btn-interact-translateY:0.1em;--btn-bg:var(--primary);--btn-fg:var(--primary-fg);--btn-active-bg:var(--primary-10);--btn-active-fg:var(--primary-90);background-color:var(--btn-bg);color:var(--btn-fg);display:inline-block;padding:var(--btn-pad-v) var(--btn-pad-h);text-decoration:none;border-radius:var(--border-radius);transition:all 0.2s ease-in-out;border:none;cursor:pointer;user-select:none;margin-top:0.1em;margin-bottom:0.1em;margin-left:var(--inline-block-spacing);margin-right:var(--inline-block-spacing);font-size:1em}`,
         `.btn:hover,.btn:focus{transform:translateY(calc(-1 * var(--btn-interact-translateY)))}`,
         `.btn:not(.disabled):not(:disabled):active,.btn.active{background-color:var(--btn-active-bg);color:var(--btn-active-fg);transform:translateY(var(--btn-interact-translateY))}`,
         `.btn.kw-{{theme}}{--btn-bg:var(--{{theme}});--btn-fg:var(--{{theme}}-fg);--btn-active-bg:var(--{{theme}}-10);--btn-active-fg:var(--{{theme}}-90)}`,
@@ -103,6 +109,8 @@ export default class Button extends AbstractComponent {
         if (this.props.popovertargetaction) btn.setAttribute("popovertargetaction", this.props.popovertargetaction);
         if (this.props.name) btn.setAttribute("name", this.props.name);
         if (this.props.type) btn.setAttribute("type", this.props.type);
+        if (this.props.command) btn.setAttribute("command", this.props.command);
+        if (this.props.commandFor) btn.setAttribute("commandfor", this.props.commandFor);
 
         if (this.children.every(c => c instanceof Icon)) btn.classList.add("icon-only");
 
@@ -151,6 +159,8 @@ export default class Button extends AbstractComponent {
                 "popovertargetaction",
                 "name",
                 "type",
+                "command",
+                "commandFor"
             ].forEach(p => {
                 if (oldProps[p] !== this.props[p]) {
                     if (this.props[p] !== null) {

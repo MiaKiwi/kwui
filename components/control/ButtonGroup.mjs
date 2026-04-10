@@ -42,9 +42,10 @@ export default class ButtonGroup extends AbstractComponent {
     static dependencies = [CSSVariables];
 
     static _rawStylingRules = [
-        `.btn-group{display:inline-flex;margin-left:var(--inline-block-spacing);margin-right:var(--inline-block-spacing)}`,
+        `.btn-group{display:inline-flex;margin-left:var(--inline-block-spacing);margin-right:var(--inline-block-spacing);gap:0.75em}`,
         `.btn-group.joined:not(.vertical) .btn:not(:first-child),.btn-group.joined.horizontal .btn:not(:first-child){margin-left:0;border-top-left-radius:0;border-bottom-left-radius:0}`,
         `.btn-group.joined:not(.vertical) .btn:not(:last-child),.btn-group.joined.horizontal .btn:not(:last-child){margin-right:0;border-top-right-radius:0;border-bottom-right-radius:0}`,
+        `.btn-group.joined{gap:0}`,
         `.btn-group.joined.vertical{flex-direction:column}`,
         `.btn-group.joined.vertical .btn:not(:first-child){margin-top:0;border-top-left-radius:0;border-top-right-radius:0}`,
         `.btn-group.joined.vertical .btn:not(:last-child){margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0}`,

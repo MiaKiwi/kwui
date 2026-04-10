@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [STVP](https://mia.kiwi/projects/stvp).
 
+## [26.3.13] - 2026-04-10
+
+### Added
+
+- `prepend` parameter to `mount()` method of `AbstractComponent` to mount a component at the start of the parent
+- `command` and `commandFor` properties to button
+- Spacing between unjoined buttons in button groups
+- Dialog
+- Modal
+
+
+
 ## [26.3.12] - 2026-04-10
 
 ### Added

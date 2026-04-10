@@ -88,8 +88,7 @@ export default class Chip extends AbstractComponent {
                 new FontawesomeIcon({
                     name: "xmark",
                     family: FontawesomeIcon.fa_families.classic,
-                    style: FontawesomeIcon.fa_styles.solid,
-                    // inline: true
+                    style: FontawesomeIcon.fa_styles.solid
                 })
             ], this.theme);
 

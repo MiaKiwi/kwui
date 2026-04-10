@@ -29,7 +29,7 @@ These features are inspired mostly by previous versions of KWUI, and [Material U
   - [x] Accordion group
   - [ ] Hero
   - [ ] Header
-  - [ ] Dialog/modal
+  - [x] Dialog/modal
 - [ ] Display
   - [x] Avatar
   - [x] Avatar group

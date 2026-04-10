@@ -308,12 +308,13 @@ export default class AbstractComponent {
     /**
      * Mounts the component to an element
      * @param {HTMLElement} parent
+     * @param {boolean} [prepend=false]
      */
-    mount(parent) {
+    mount(parent, prepend = false) {
         if (this._isMounted) return;
 
         this.prepare();
-        parent.appendChild(this.instance);
+        if (prepend) { parent.prepend(this.instance) } else { parent.appendChild(this.instance) }
         this.constructor.styleRegister.register(this.constructor);
         this._isMounted = true;
 
