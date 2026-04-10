@@ -37,7 +37,7 @@ These features are inspired mostly by previous versions of KWUI, and [Material U
 - [ ] Feedback
   - [x] Callout
   - [ ] Toast
-  - [ ] Loading (suspense)
+  - [x] Loading (suspense)
 - [ ] Input
   - [ ] Form
   - [ ] Field

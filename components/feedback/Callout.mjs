@@ -8,8 +8,7 @@ export default class Callout extends AbstractComponent {
     /**
      * Creates a new component
      * @param {object} props Component properties
-     * @param {string} props.location
-     * @param {boolean} props.opened
+     * @param {string} props.type
      * @param {string[]|HTMLElement[]|AbstractElement[]} children Component children
      * @param {string} theme Component color theme
      * @param {string} id Component ID
