@@ -10,12 +10,14 @@ export default class AbstractComponent {
      * @param {string[]|HTMLElement[]|AbstractElement[]} children Component children
      * @param {string} theme Component color theme
      * @param {string} id Component ID
+     * @param {string[]} classes Component classes
      */
-    constructor(props = {}, children = [], theme = null, id = null) {
+    constructor(props = {}, children = [], theme = null, id = null, classes = []) {
         this._id = id || IDProvider.random();
         this._props = {};
         this._children = [];
         this._theme = null;
+        this._classes = [];
 
         this._cleanUpFunctions = [];
         this._listeners = {};
@@ -25,6 +27,7 @@ export default class AbstractComponent {
         this.setProps(props);
         this.setChildren(children);
         this.setTheme(theme);
+        this.setClasses(classes)
 
         this.onCreation();
     }
@@ -109,6 +112,26 @@ export default class AbstractComponent {
 
     get instance() { return this?._instance; }
     get parent() { return this?._instance?.parentElement; }
+
+    get classes() { return this._classes; }
+    setClasses(classes) {
+        this._classes.forEach(c => this.removeClass(c));
+        this._classes = [];
+        classes.forEach(c => this.addClass(c));
+    }
+    hasClass(c) { return this.classes.includes(c); }
+    addClass(c) {
+        if (!this.hasClass(c)) {
+            this._classes.push(c);
+            this.onClassAdded(c);
+        }
+    }
+    removeClass(c) {
+        if (this.hasClass(c)) {
+            this._classes = this._classes.filter(cls => cls !== c);
+            this.onClassRemoved(c);
+        }
+    }
 
     get props() { return this._props; }
     setProps(props) {
@@ -201,7 +224,8 @@ export default class AbstractComponent {
             { ...this._props },
             clonedChildren,
             this._theme,
-            null
+            null,
+            this._classes
         );
     }
 
@@ -235,6 +259,22 @@ export default class AbstractComponent {
                     }
                 });
             }
+        }
+    }
+
+    onClassAdded(c) {
+        if (this.isMounted()) {
+            let i = this.i();
+
+            i.classList.add(c);
+        }
+    }
+
+    onClassRemoved(c) {
+        if (this.isMounted()) {
+            let i = this.i();
+
+            i.classList.remove(c);
         }
     }
 
@@ -302,6 +342,7 @@ export default class AbstractComponent {
 
         this._instance = this.render();
         this._instance.id = this.id;
+        this._instance.classList.add(...this._classes);
         this.bindEvents();
     }
 

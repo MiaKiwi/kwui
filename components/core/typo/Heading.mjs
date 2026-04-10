@@ -17,9 +17,10 @@ export default class Heading extends Text {
      * @param {string[]|HTMLElement[]|AbstractElement[]} children Component children
      * @param {string} theme Component color theme
      * @param {string} id Component ID
+     * @param {string[]} classes Component classes
      */
-    constructor(props = {}, children = [], theme = null, id = null) {
-        super(props, children, theme, id);
+    constructor(props = {}, children = [], theme = null, id = null, classes = []) {
+        super(props, children, theme, id, classes);
     }
 
     static _defaultProps = {
