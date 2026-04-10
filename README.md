@@ -36,6 +36,7 @@ new WhateverComponentYouWant(
     "primary",          // theme:    The theme of the component. Possible themes
                         //           are stored in the `_themes` static property.
     "component-1234"    // id:       A custom ID for the component's instance.
+    []                  // classes:  A list of classes to apply to the component's instance.
 );
 ```
 

@@ -18,17 +18,14 @@ These features are inspired mostly by previous versions of KWUI, and [Material U
 - [ ] Navigation
   - [x] Anchor
   - [x] Breadcrumbs
-  - [ ] Drawer
   - [ ] Navigation bar
-- [ ] Layout
+- [x] Layout
   - [x] Card
   - [x] Card group
   - [x] Card footer
   - [x] Card header
   - [x] Accordion
   - [x] Accordion group
-  - [ ] Hero
-  - [ ] Header
   - [x] Dialog/modal
 - [ ] Display
   - [x] Avatar
@@ -36,12 +33,10 @@ These features are inspired mostly by previous versions of KWUI, and [Material U
   - [x] Icons
   - [ ] Carousel
   - [ ] Table
-  - [ ] Tabs
-  - [ ] Tooltip
+  - [x] Tooltip
 - [ ] Feedback
-  - [ ] Callout
+  - [x] Callout
   - [ ] Toast
-  - [ ] Badge
   - [ ] Loading (suspense)
 - [ ] Input
   - [ ] Form

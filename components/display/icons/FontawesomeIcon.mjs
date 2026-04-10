@@ -137,14 +137,38 @@ export default class FontawesomeIcon extends Icon {
         if (this.isMounted() && JSON.stringify(this._props) !== JSON.stringify(oldProps)) {
             let i = this.i();
 
-            if (oldProps.name !== this.props.name) i.classList.remove(`fa-${oldProps.name}`); i.classList.add(`fa-${this.props.name}`);
-            oldProps.inline !== this.props.inline && this.props.inline ? i.classList.add(`inline`) : i.classList.remove("inline");
-            if (oldProps.style !== this.props.style) i.classList.remove(`fa-${oldProps.style}`); i.classList.add(`fa-${this.props.style}`);
-            if (oldProps.family !== this.props.family) i.classList.remove(`fa-${oldProps.family}`); i.classList.add(`fa-${this.props.family}`);
-            if (oldProps.size !== this.props.size) i.classList.remove(`fa-${oldProps.size}`); i.classList.add(`fa-${this.props.size}`);
-            if (oldProps.animation !== this.props.animation) i.classList.remove(`fa-${oldProps.animation}`); i.classList.add(`fa-${this.props.animation}`);
-            if (oldProps.rotate !== this.props.rotate) i.classList.remove(`fa-rotate-${oldProps.rotate}`); i.classList.add(`fa-rotate-${this.props.rotate}`);
-            if (oldProps.flip !== this.props.flip) i.classList.remove(`fa-flip-${oldProps.flip}`); i.classList.add(`fa-flip-${this.props.flip}`);
+            if (oldProps.name !== this.props.name) {
+                i.classList.remove(`fa-${oldProps.name}`);
+                if (this.props.name) i.classList.add(`fa-${this.props.name}`);
+            }
+            if (oldProps.inline !== this.props.inline) {
+                i.classList.remove("inline");
+                if (this.props.inline) i.classList.add(`inline`);
+            }
+            if (oldProps.style !== this.props.style) {
+                i.classList.remove(`fa-${oldProps.style}`);
+                if (this.props.style) i.classList.add(`fa-${this.props.style}`);
+            }
+            if (oldProps.family !== this.props.family) {
+                i.classList.remove(`fa-${oldProps.family}`);
+                if (this.props.family) i.classList.add(`fa-${this.props.family}`);
+            }
+            if (oldProps.size !== this.props.size) {
+                i.classList.remove(`fa-${oldProps.size}`);
+                if (this.props.size) i.classList.add(`fa-${this.props.size}`);
+            }
+            if (oldProps.animation !== this.props.animation) {
+                i.classList.remove(`fa-${oldProps.animation}`);
+                if (this.props.animation) i.classList.add(`fa-${this.props.animation}`);
+            }
+            if (oldProps.rotate !== this.props.rotate) {
+                i.classList.remove(`fa-rotate-${oldProps.rotate}`);
+                if (this.props.rotate) i.classList.add(`fa-rotate-${this.props.rotate}`);
+            }
+            if (oldProps.flip !== this.props.flip) {
+                i.classList.remove(`fa-flip-${oldProps.flip}`);
+                if (this.props.flip) i.classList.add(`fa-flip-${this.props.flip}`);
+            }
         }
     }
 

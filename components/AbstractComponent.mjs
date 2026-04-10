@@ -237,7 +237,7 @@ export default class AbstractComponent {
         if (this.isMounted()) {
             if (child instanceof AbstractComponent) {
                 child.unmount();
-                child.mount(this.i());
+                child.mount(this.childrenContainer());
             } else if (child instanceof HTMLElement) {
                 this.childrenContainer().appendChild(child);
             } else if (typeof child === "string") {

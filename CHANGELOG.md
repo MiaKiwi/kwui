@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [STVP](https://mia.kiwi/projects/stvp).
 
+## [26.3.15] - 2026-04-10
+
+### Added
+
+- Callout
+- Tooltip
+
+### Fixed
+
+- Fontawesome icon props update conditions
+
+
+
 ## [26.3.14] - 2026-04-10
 
 ### Added
