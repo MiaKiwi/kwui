@@ -44,12 +44,12 @@ export default class AccordionSummary extends AbstractComponent {
     static dependencies = [CSSVariables, Animations];
 
     static _rawStylingRules = [
-        `.accordion-sum{position:relative;list-style:none;cursor:pointer;padding:var(--padding-sm) 0;display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:var(--letter-spacing);}`,
-        `.accordion-sum.mark-left{flex-direction:row-reverse;}`,
-        `.accordion[open] .accordion-sum{padding-bottom:calc(var(--padding-sm)*2);margin-bottom:var(--padding-sm);}`,
-        `.accordion[open] .accordion-sum::after{content:"";position:absolute;bottom:0;left:var(--padding-sm);width:calc(100% - var(--padding-sm) * 2);background-color:var(--border);height:calc(var(--border-thin-width)/2);}`,
-        `.accordion-mark{transition:rotate var(--transition-medium);--mark-rotation:180deg;}`,
-        `.accordion[open] .accordion-sum .accordion-mark{rotate:var(--mark-rotation);}`
+        `.accordion-sum{position:relative;list-style:none;cursor:pointer;padding:var(--padding-sm) 0;display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:var(--letter-spacing)}`,
+        `.accordion-sum.mark-left{flex-direction:row-reverse}`,
+        `.accordion[open] .accordion-sum{padding-bottom:calc(var(--padding-sm)*2);margin-bottom:var(--padding-sm)}`,
+        `.accordion[open] .accordion-sum::after{content:"";position:absolute;bottom:0;left:var(--padding-sm);width:calc(100% - var(--padding-sm) * 2);background-color:var(--border);height:calc(var(--border-thin-width)/2)}`,
+        `.accordion-mark{transition:rotate var(--transition-medium);--mark-rotation:180deg}`,
+        `.accordion[open] .accordion-sum .accordion-mark{rotate:var(--mark-rotation)}`
     ]
 
     onPropsChange(oldProps) {

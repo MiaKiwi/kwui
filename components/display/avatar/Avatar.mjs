@@ -7,7 +7,10 @@ export default class Avatar extends AbstractComponent {
     /**
      * Creates a new component
      * @param {object} props Component properties
-     * 
+     * @param {string} props.shape
+     * @param {boolean} props.inline
+     * @param {string|null} props.bgUri
+     * @param {string|null} props.size
      * @param {string[]|HTMLElement[]|AbstractElement[]} children Component children
      * @param {string} theme Component color theme
      * @param {string} id Component ID
@@ -60,19 +63,19 @@ export default class Avatar extends AbstractComponent {
     }
 
     static _rawStylingRules = [
-        `.avatar{--avatar-size:2em;--avatar-bg:var(--primary-90);--avatar-fg:var(--primary-10);--avatar-border-radius:var(--border-roundness);display:flex;align-items:center;justify-content:center;line-height:1;overflow:hidden;width:var(--avatar-size);height:var(--avatar-size);background-color:var(--avatar-bg);color:var(--avatar-fg);font-size:1.25em;border-radius:var(--avatar-border-radius);user-select:none;margin:var(--padding-sm);background-size:contain;background-position:center;background-repeat:no-repeat;}`,
-        `.avatar.circular{--avatar-border-radius:50%;}`,
-        `.avatar.square{--avatar-border-radius:0;}`,
-        `.avatar.rounded{--avatar-border-radius:var(--border-roundness);}`,
-        `.avatar.kw-{{theme}}{--avatar-bg:var(--{{theme}}-90);--avatar-fg:var(--{{theme}}-10);}`,
-        `.avatar.inline{margin:0;display:inline-flex;vertical-align:middle;margin-inline:var(--letter-spacing) var(--letter-spacing);}`,
-        `.avatar-huge{font-size:3.739em;}`,
-        `.avatar-xxxl{font-size:3.324em;}`,
-        `.avatar-xxl{font-size:2.978em;}`,
-        `.avatar-xl{font-size:2.69em;}`,
-        `.avatar-l{font-size:2.45em;}`,
-        `.avatar-md{font-size:1.25em;}`,
-        `.avatar-s{font-size:1em;}`
+        `.avatar{--avatar-size:2em;--avatar-bg:var(--primary-90);--avatar-fg:var(--primary-10);--avatar-border-radius:var(--border-roundness);display:flex;align-items:center;justify-content:center;line-height:1;overflow:hidden;width:var(--avatar-size);height:var(--avatar-size);background-color:var(--avatar-bg);color:var(--avatar-fg);font-size:1.25em;border-radius:var(--avatar-border-radius);user-select:none;margin:var(--padding-sm);background-size:contain;background-position:center;background-repeat:no-repeat}`,
+        `.avatar.circular{--avatar-border-radius:50%}`,
+        `.avatar.square{--avatar-border-radius:0}`,
+        `.avatar.rounded{--avatar-border-radius:var(--border-roundness)}`,
+        `.avatar.kw-{{theme}}{--avatar-bg:var(--{{theme}}-90);--avatar-fg:var(--{{theme}}-10)}`,
+        `.avatar.inline{margin:0;display:inline-flex;vertical-align:middle;margin-inline:var(--letter-spacing) var(--letter-spacing)}`,
+        `.avatar-huge{font-size:3.739em}`,
+        `.avatar-xxxl{font-size:3.324em}`,
+        `.avatar-xxl{font-size:2.978em}`,
+        `.avatar-xl{font-size:2.69em}`,
+        `.avatar-l{font-size:2.45em}`,
+        `.avatar-md{font-size:1.25em}`,
+        `.avatar-s{font-size:1em}`
     ];
 
     static dependencies = [CSSVariables];

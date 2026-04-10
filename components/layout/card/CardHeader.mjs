@@ -4,7 +4,7 @@ import Typography from "../../core/Typography.mjs";
 
 
 
-export default class CardFooter extends AbstractComponent {
+export default class CardHeader extends AbstractComponent {
     /**
      * Creates a new component
      * @param {object} props Component properties
@@ -19,13 +19,13 @@ export default class CardFooter extends AbstractComponent {
     static dependencies = [CSSVariables, Typography];
 
     static _rawStylingRules = [
-        `.card-footer{margin-top:var(--padding-md);padding-top:var(--padding-sm);border-top:var(--border-thin-width) solid var(--border)}`
+        `.card-header{margin-bottom:var(--padding-sm)}`
     ]
 
     render() {
         let el = document.createElement("div");
 
-        el.classList.add("card-footer", "text-s", "text-muted", this.themeClass());
+        el.classList.add("card-header", "text-s", this.themeClass());
 
         this.attachChildren(el);
         this.attachListeners(el);

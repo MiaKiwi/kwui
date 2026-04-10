@@ -28,9 +28,9 @@ export default class AccordionGroup extends AbstractComponent {
     static dependencies = [CSSVariables];
 
     static _rawStylingRules = [
-        `.accordion-group{display:flex;flex-direction:column;}`,
-        `.accordion-group>.accordion:not(:first-of-type){margin-top:0;border-top-width:0;}`,
-        `.accordion-group>.accordion:not(:last-child){margin-bottom:0;}`
+        `.accordion-group{display:flex;flex-direction:column}`,
+        `.accordion-group>.accordion:not(:first-of-type){margin-top:0;border-top-width:0}`,
+        `.accordion-group>.accordion:not(:last-child){margin-bottom:0}`
     ]
 
     render() {

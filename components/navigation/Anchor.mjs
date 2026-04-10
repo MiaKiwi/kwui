@@ -84,10 +84,10 @@ export default class Anchor extends AbstractComponent {
     }
 
     static _rawStylingRules = [
-        `.anchor{cursor:pointer;}`,
-        `.anchor.subtle{text-decoration:none;}`,
-        `.anchor:hover,.anchor:active,.anchor:focus{text-decoration:underline;}`,
-        `.anchor.kw-{{theme}}{color:var(--{{theme}});}.anchor.kw-{{theme}}:visited,.anchor.kw-{{theme}}:active,.anchor.kw-{{theme}}:hover,.anchor.kw-{{theme}}:focus{color:var(--{{theme}}-50);}`
+        `.anchor{cursor:pointer}`,
+        `.anchor.subtle{text-decoration:none}`,
+        `.anchor:hover,.anchor:active,.anchor:focus{text-decoration:underline}`,
+        `.anchor.kw-{{theme}}{color:var(--{{theme}});}.anchor.kw-{{theme}}:visited,.anchor.kw-{{theme}}:active,.anchor.kw-{{theme}}:hover,.anchor.kw-{{theme}}:focus{color:var(--{{theme}}-50)}`
     ]
 
     render() {

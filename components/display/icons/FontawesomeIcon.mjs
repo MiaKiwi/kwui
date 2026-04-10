@@ -127,7 +127,7 @@ export default class FontawesomeIcon extends Icon {
 
     static _rawStylingRules = [
         `@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css');`,
-        `.icon.kw-{{theme}}{color:var(--{{theme}});}`
+        `.icon.kw-{{theme}}{color:var(--{{theme}})}`
     ];
 
     static dependencies = [Icon];

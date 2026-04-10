@@ -7,9 +7,6 @@ export default class CardGroup extends AbstractComponent {
     /**
      * Creates a new component
      * @param {object} props Component properties
-     * @param {string} props.shape
-     * @param {boolean} props.borderless
-     * @param {boolean} props.glass
      * @param {string[]|HTMLElement[]|AbstractElement[]} children Component children
      * @param {string} theme Component color theme
      * @param {string} id Component ID
@@ -91,15 +88,15 @@ export default class CardGroup extends AbstractComponent {
     static dependencies = [CSSVariables];
 
     static _rawStylingRules = [
-        `.card-group{display:flex;gap:var(--inline-block-spacing);}`,
-        `.card-group.grid{display:grid;}`,
-        `.card-group.grid.vertical{grid-auto-flow: row;}`,
-        `.card-group.flex.vertical{flex-direction: column;}`,
-        `.card-group.grid.horizontal{grid-auto-flow: column;}`,
-        `.card-group.flex.horizontal{flex-direction: row;}`,
-        `.card-group.grid.vertical.wrap{grid-template-columns:repeat(auto-fit,minmax(200px, 1fr));}`,
-        `.card-group.grid.horizontal.wrap{grid-template-rows:repeat(auto-fit, minmax(200px, 1fr));}`,
-        `.card-group.flex.wrap{flex-wrap:wrap;}`,
+        `.card-group{display:flex;gap:var(--inline-block-spacing)}`,
+        `.card-group.grid{display:grid}`,
+        `.card-group.grid.vertical{grid-auto-flow: row}`,
+        `.card-group.flex.vertical{flex-direction: column}`,
+        `.card-group.grid.horizontal{grid-auto-flow: column}`,
+        `.card-group.flex.horizontal{flex-direction: row}`,
+        `.card-group.grid.vertical.wrap{grid-template-columns:repeat(auto-fit,minmax(200px, 1fr))}`,
+        `.card-group.grid.horizontal.wrap{grid-template-rows:repeat(auto-fit, minmax(200px, 1fr))}`,
+        `.card-group.flex.wrap{flex-wrap:wrap}`,
     ]
 
     onPropsChange(oldProps) {

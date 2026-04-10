@@ -25,10 +25,10 @@ export default class Breadcrumbs extends AbstractComponent {
     static dependencies = [CSSVariables];
 
     static _rawStylingRules = [
-        `.breadcrumbs{list-style:none;display:flex;flex-wrap:wrap;gap:var(--letter-spacing);padding:var(--padding-sm);margin:0;}`,
+        `.breadcrumbs{list-style:none;display:flex;flex-wrap:wrap;gap:var(--letter-spacing);padding:var(--padding-sm);margin:0}`,
         `.breadcrumbs .breadcrumbs-item{position:relative}`,
-        `.breadcrumbs .breadcrumbs-item:not(:last-child)::after{content:'/';opacity:var(--muted-transparency);margin-inline-start:var(--letter-spacing);}`,
-        `.breadcrumbs .breadcrumbs-item:not(:first-child):not(:last-child):not(:hover):not(:focus){opacity:var(--muted-transparency);text-decoration:none;}`
+        `.breadcrumbs .breadcrumbs-item:not(:last-child)::after{content:'/';opacity:var(--muted-transparency);margin-inline-start:var(--letter-spacing)}`,
+        `.breadcrumbs .breadcrumbs-item:not(:first-child):not(:last-child):not(:hover):not(:focus){opacity:var(--muted-transparency);text-decoration:none}`
     ]
 
     attachChildren(element, children = this.children) {

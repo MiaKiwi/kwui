@@ -42,14 +42,14 @@ export default class ButtonGroup extends AbstractComponent {
     static dependencies = [CSSVariables];
 
     static _rawStylingRules = [
-        `.btn-group{display:inline-flex;margin-left:var(--inline-block-spacing);margin-right:var(--inline-block-spacing);}`,
-        `.btn-group.joined:not(.vertical) .btn:not(:first-child),.btn-group.joined.horizontal .btn:not(:first-child){margin-left:0;border-top-left-radius:0;border-bottom-left-radius:0;}`,
-        `.btn-group.joined:not(.vertical) .btn:not(:last-child),.btn-group.joined.horizontal .btn:not(:last-child){margin-right:0;border-top-right-radius:0;border-bottom-right-radius:0;}`,
-        `.btn-group.joined.vertical{flex-direction:column;}`,
-        `.btn-group.joined.vertical .btn:not(:first-child){margin-top:0;border-top-left-radius:0;border-top-right-radius:0;}`,
-        `.btn-group.joined.vertical .btn:not(:last-child){margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;}`,
-        `.btn-group.vertical{flex-direction:column;}`,
-        `.btn-group.unique:has(>.btn.single-use.active){pointer-events:none;}`,
+        `.btn-group{display:inline-flex;margin-left:var(--inline-block-spacing);margin-right:var(--inline-block-spacing)}`,
+        `.btn-group.joined:not(.vertical) .btn:not(:first-child),.btn-group.joined.horizontal .btn:not(:first-child){margin-left:0;border-top-left-radius:0;border-bottom-left-radius:0}`,
+        `.btn-group.joined:not(.vertical) .btn:not(:last-child),.btn-group.joined.horizontal .btn:not(:last-child){margin-right:0;border-top-right-radius:0;border-bottom-right-radius:0}`,
+        `.btn-group.joined.vertical{flex-direction:column}`,
+        `.btn-group.joined.vertical .btn:not(:first-child){margin-top:0;border-top-left-radius:0;border-top-right-radius:0}`,
+        `.btn-group.joined.vertical .btn:not(:last-child){margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0}`,
+        `.btn-group.vertical{flex-direction:column}`,
+        `.btn-group.unique:has(>.btn.single-use.active){pointer-events:none}`,
     ]
 
     render() {

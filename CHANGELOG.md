@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [STVP](https://mia.kiwi/projects/stvp).
 
+## [26.3.12] - 2026-04-10
+
+### Added
+
+- Avatar group
+- Card header
+- `inline` property to headings
+
+### Changed
+
+- Saved around 170 characters when all styles loaded by removing trailing semicolons
+
+
+
 ## [26.3.11] - 2026-04-09
 
 ### Added
