@@ -27,7 +27,9 @@ export default class AbstractComponent {
         this.setProps(props);
         this.setChildren(children);
         this.setTheme(theme);
-        this.setClasses(classes)
+        this.setClasses(classes);
+
+        this.constructor.__registerComponent(this);
 
         this.onCreation();
     }
@@ -67,6 +69,15 @@ export default class AbstractComponent {
     }
 
     static styleRegister = new StyleRegister();
+
+    static __componentsRegistry = new Set();
+    static __registerComponent(component) {
+        if (!this.__componentsRegistry.has(component)) this.__componentsRegistry.add(component);
+    }
+
+    static getComponents(includeSubclasses = true) {
+        return Array.from(this.__componentsRegistry ?? []).filter(c => c instanceof this && (includeSubclasses || c.constructor.name === this.name));
+    }
 
 
 
@@ -342,7 +353,7 @@ export default class AbstractComponent {
 
         this._instance = this.render();
         this._instance.id = this.id;
-        this._instance.classList.add(...this._classes);
+        if (this._classes.length > 0) this._instance.classList.add(...this._classes);
         this.bindEvents();
     }
 
