@@ -73,6 +73,7 @@ export default class Card extends AbstractComponent {
         card.classList.add("card", this.props.shape, this.themeClass());
         if (this.props.glass) card.classList.add("glass");
         if (this.props.compact) card.classList.add("compact");
+        if (this.props.borderless) card.classList.add("borderless");
 
         this.attachChildren(card);
         this.attachListeners(card);

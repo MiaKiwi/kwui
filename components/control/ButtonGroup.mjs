@@ -91,4 +91,24 @@ export default class ButtonGroup extends AbstractComponent {
             this._cleanUpFunctions.push(() => { group.removeEventListener("keydown", uniqueCallback) });
         }
     }
+
+
+    onPropsChange(oldProps) {
+        if (this.isMounted() && JSON.stringify(this._props) !== JSON.stringify(oldProps)) {
+            let i = this.i();
+
+            if (oldProps.orientation !== this.props.orientation) {
+                i.classList.remove(oldProps.orientation);
+                if (this.props.orientation) i.classList.add(this.props.orientation);
+            }
+            if (oldProps.unique !== this.props.unique) {
+                i.classList.remove("unique");
+                if (this.props.unique) i.classList.add("unique");
+            }
+            if (oldProps.joined !== this.props.joined) {
+                i.classList.remove("joined");
+                if (this.props.joined) i.classList.add("joined");
+            }
+        }
+    }
 }

@@ -97,7 +97,9 @@ export default class Chip extends AbstractComponent {
                 let event = new CustomEvent('chip-close', {
                     detail: {
                         originalEvent: e
-                    }
+                    },
+                    bubbles: true,
+                    cancelable: true
                 });
                 chip.dispatchEvent(event);
 

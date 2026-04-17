@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [STVP](https://mia.kiwi/projects/stvp).
 
+## [26.3.18] - 2026-04-17
+
+### Added
+
+- Dynamic button group props change handler
+- Chip group
+- Borderless accordion style
+
+### Changed
+
+- Enabled bubbling on 'chip-close' event of chip component
+- .text-md from 100% to 1rem
+- Made avatar image hide text, useful for fallback text if the image fails to load
+
+### Fixed
+
+- Avatar props change handler
+- Avatar vertical alignment when empty
+- Borderless card style not applying on render
+
+
+
 ## [26.3.17] - 2026-04-13
 
 ### Added

@@ -15,6 +15,7 @@ These features are inspired mostly by previous versions of KWUI, and [Material U
   - [x] Button
   - [x] Button group
   - [x] Chip
+  - [x] Chip group
 - [ ] Navigation
   - [x] Anchor
   - [x] Breadcrumbs
