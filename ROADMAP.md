@@ -35,9 +35,9 @@ These features are inspired mostly by previous versions of KWUI, and [Material U
   - [ ] Carousel
   - [ ] Table
   - [x] Tooltip
-- [ ] Feedback
+- [x] Feedback
   - [x] Callout
-  - [ ] Toast
+  - [x] Toast
   - [x] Loading (suspense)
 - [ ] Input
   - [ ] Form

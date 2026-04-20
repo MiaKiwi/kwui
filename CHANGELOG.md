@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [STVP](https://mia.kiwi/projects/stvp).
 
+## [26.3.19] - 2026-04-20
+
+### Added
+
+- Toast
+- Toast manager. Please use the toast manager to show toasts, not the toast component directly
+
+
+
 ## [26.3.18] - 2026-04-17
 
 ### Added

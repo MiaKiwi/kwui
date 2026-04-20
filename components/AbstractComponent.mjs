@@ -290,7 +290,7 @@ export default class AbstractComponent {
     }
 
     onThemeChange(oldTheme) {
-        if (this.isMounted()) {
+        if (this.isMounted() && oldTheme !== this.theme) {
             let i = this.i();
 
             i.classList.remove(this.themeClass(oldTheme));
