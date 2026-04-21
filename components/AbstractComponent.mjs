@@ -79,6 +79,12 @@ export default class AbstractComponent {
         return Array.from(this.__componentsRegistry ?? []).filter(c => c instanceof this && (includeSubclasses || c.constructor.name === this.name));
     }
 
+    static findComponentByID(id, includeSubclasses = true) {
+        let components = AbstractComponent.getComponents(includeSubclasses);
+
+        return components.filter(c => c.id === id)[0] ?? null;
+    }
+
 
 
     static get deepDependencies() {
@@ -324,8 +330,9 @@ export default class AbstractComponent {
             ...element.children,
             ...element.childNodes
         ].forEach(c => {
-            if (c instanceof AbstractComponent) {
-                c.unmount();
+            let comp = this.constructor.findComponentByID(c.id);
+            if (c.id && comp instanceof AbstractComponent) {
+                comp.unmount();
             } else {
                 c.remove();
             }
@@ -363,7 +370,7 @@ export default class AbstractComponent {
      * @param {boolean} [prepend=false]
      */
     mount(parent, prepend = false) {
-        if (this._isMounted) return;
+        if (this.isMounted()) this.unmount();
 
         this.prepare();
         if (prepend) { parent.prepend(this.instance) } else { parent.appendChild(this.instance) }
@@ -391,6 +398,8 @@ export default class AbstractComponent {
 
         this._cleanUpFunctions.forEach(fn => fn());
         this._cleanUpFunctions = [];
+
+        this.detachChildren(this.childrenContainer());
 
         this._instance?.remove();
         this._instance = null;

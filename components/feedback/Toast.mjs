@@ -142,6 +142,7 @@ export default class Toast extends AbstractComponent {
         super.onCreation();
 
         this.addListener("mouseenter", () => { this.pauseTimer(); });
+        this.addListener("mousemove", (e) => { this.pauseTimer(); });
         this.addListener("focusin", () => { this.pauseTimer(); });
         this.addListener("mouseleave", () => { this.resumeTimer(); });
         this.addListener("focusout", () => { this.resumeTimer(); });

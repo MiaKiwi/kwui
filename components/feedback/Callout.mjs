@@ -80,8 +80,10 @@ export default class Callout extends AbstractComponent {
     }
 
     static _rawStylingRules = [
-        `.callout{--callout-fg:var(--text);--callout-bg:var(--bg);--callout-border:var(--callout-fg);color:var(--callout-fg);background-color:var(--callout-bg);border:var(--border-thin-width) solid var(--callout-border);border-radius:var(--border-roundness);margin:var(--padding-sm) 0;padding:var(--padding-sm) var(--padding-sm);box-shadow:var(--box-shadow);display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:var(--letter-spacing)}`,
+        `.callout{--callout-fg:var(--text);--callout-bg:var(--bg);--callout-border:var(--callout-fg);color:var(--callout-fg);background-color:var(--callout-bg);border:var(--border-thin-width) solid var(--callout-border);border-radius:var(--border-roundness);margin:var(--padding-sm) 0;padding:var(--padding-sm) var(--padding-sm);box-shadow:var(--box-shadow);gap:var(--letter-spacing);display:grid;grid-template-areas:"icon content";grid-template-columns:auto 1fr auto;align-items:baseline}`,
         `.callout.kw-{{theme}}{--callout-bg:var(--{{theme}}-90);--callout-fg:var(--{{theme}}-10);--callout-border:var(--{{theme}});}`,
+        `.callout .callout-icon{grid-area:icon}`,
+        `.callout .callout-content{grid-area:content}`,
     ];
 
     static dependencies = [CSSVariables];

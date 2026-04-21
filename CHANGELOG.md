@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [STVP](https://mia.kiwi/projects/stvp).
 
+## [26.3.20] - 2026-04-21
+
+### Added
+
+- `findComponentByID()` method to find a component from an ID
+
+### Changed
+
+- Callout styling
+- Toast timers are reset when the toast manager is not mounted
+- Already mounted components are unmounted first when `mount()` is called, instead of just exiting
+- Children are detached when their parent is unmounted
+
+### Fixed
+
+- Toast timer unpaused when a nested element is hovered
+- `detachChildren()` not actually unmounting component instances
+
+
+
 ## [26.3.19] - 2026-04-20
 
 ### Added
