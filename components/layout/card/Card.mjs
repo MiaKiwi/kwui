@@ -15,9 +15,10 @@ export default class Card extends AbstractComponent {
      * @param {string} theme Component color theme
      * @param {string} id Component ID
      * @param {string[]} classes Component classes
+     * @param {object} attributes Component attributes
      */
-    constructor(props = {}, children = [], theme = null, id = null, classes = []) {
-        super(props, children, theme, id, classes);
+    constructor(props = {}, children = [], theme = null, id = null, classes = [], attributes = {}) {
+        super(props, children, theme, id, classes, attributes);
     }
 
     static shapes = {
@@ -47,7 +48,7 @@ export default class Card extends AbstractComponent {
         `.card{--card-bg:var(--bg);--card-fg:var(--text);--card-border:var(--border);--card-border-radius:var(--border-roundness);padding:var(--padding-sm) var(--padding-md);background-color:var(--card-bg);color:var(--card-fg);border:var(--border-thin-width) solid var(--card-border);border-radius:var(--card-border-radius);box-shadow:var(--box-shadow);margin:var(--padding-md) 0}`,
         `.card.rounded{border-radius:var(--border-roundness)}`,
         `.card.square{border-radius:0}`,
-        `.card.compact{margin:0}`,
+        `.card.compact{margin:0;padding:var(--padding-sm)}`,
         `.card.kw-{{theme}}{--card-border:var(--{{theme}});--card-bg:var(--{{theme}}-90);--card-fg:var(--{{theme}}-10)}`,
         `.card.borderless{border:none;box-shadow:none}`,
         `.card.glass{backdrop-filter:blur(3px);background-color:transparent;background-color:color-mix(in srgb,var(--card-bg),transparent 90%)}`

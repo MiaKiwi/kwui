@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [STVP](https://mia.kiwi/projects/stvp).
 
+## [Unreleased]
+
+### Added
+
+- `attributes` parameter for components
+- `CustomEvent` dispatches for component changes:
+- `init` when instantiated (basically useless since the component isn't mounted yet);
+- `classes-change` when a class is added or removed;
+- `attributes-change` when an attribute is added or removed or changed;
+- `props-change` when properties are changed;
+- `children-change` when a child is added or removed;
+- `listeners-change` when a listener is added or removed;
+- `theme-change` when the theme is changed;
+- `mount` when the component is mounted;
+- `unmount` when the component is about to be unmounted (or is it dismounted?? idk).
+- `eventDispatchWrapper`, `listenersWrapper`, `attributesWrapper`, and `classWrapper` getter methods to customize where their respective parameters are attached
+- Util methods for text-styling classes: `textThemeClass(theme)`, `sizeClass(size)`, `fontClass(font)`, `alignmentClass(alignment)`, `mutedClass()`, `italicClass()`, `strongClass()`
+- Props JSDoc for tooltip
+- Tag component. Used to create a component with any tag name
+
+### Changed
+
+- Compact card styling
+
+### Fixed
+
+- Twin CSS rules no longer included twice by `StyleRegister`
+
+
+
 ## [26.3.20] - 2026-04-21
 
 ### Added

@@ -24,19 +24,20 @@ All components take the same parameters:
 
 ```javascript
 new WhateverComponentYouWant(
-    {},                 // props:    An object with the properties of the component.
-                        //           Some components may have required or default
-                        //           properties, you can ignore them (use their
-                        //           fallback value) or overwrite them; they will be
-                        //           validated by the component anyway.
-                        //           Of course, you may also include properties of
-                        //           your own for custom functionalities.
-    [],                 // children: The content of the component, can be other
-                        //           components, `HTMLElement`s, or HTML strings
-    "primary",          // theme:    The theme of the component. Possible themes
-                        //           are stored in the `_themes` static property.
-    "component-1234"    // id:       A custom ID for the component's instance.
-    []                  // classes:  A list of classes to apply to the component's instance.
+    {},                 // props:       An object with the properties of the component.
+                        //              Some components may have required or default
+                        //              properties, you can ignore them (use their
+                        //              fallback value) or overwrite them; they will be
+                        //              validated by the component anyway.
+                        //              Of course, you may also include properties of
+                        //              your own for custom functionalities.
+    [],                 // children:    The content of the component, can be other
+                        //              components, `HTMLElement`s, or HTML strings
+    "primary",          // theme:       The theme of the component. Possible themes
+                        //              are stored in the `_themes` static property.
+    "component-1234"    // id:          A custom ID for the component's instance.
+    []                  // classes:     A list of classes to apply to the component's instance.
+    {}                  // attributes:  The attributes to apply to the component's instance.
 );
 ```
 

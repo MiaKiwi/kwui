@@ -17,9 +17,10 @@ export default class ToastManager extends AbstractComponent {
      * @param {string} theme Component color theme
      * @param {string} id Component ID
      * @param {string[]} classes Component classes
+     * @param {object} attributes Component attributes
      */
-    constructor(props = {}, children = [], theme = null, id = null, classes = []) {
-        super(props, children, theme, id, classes);
+    constructor(props = {}, children = [], theme = null, id = null, classes = [], attributes = {}) {
+        super(props, children, theme, id, classes, attributes);
     }
 
     static locations = {
@@ -102,7 +103,7 @@ export default class ToastManager extends AbstractComponent {
 
     onUnmount() {
         this.toasts?.forEach(t => { t.pauseTimer(); t._lock(); });
-        
+
         super.onUnmount();
     }
 
@@ -154,6 +155,21 @@ export default class ToastManager extends AbstractComponent {
         this.new(toast);
     }
 
+    _adjustRenderOffset() {
+        if (!this.isMounted() || this.toasts.length <= 0) return;
+
+        let toasts = this.toasts;
+        let head = toasts[0];
+        let headHeight = head.i()?.getBoundingClientRect()?.height ?? 0;
+        if (toasts.length > 1) headHeight *= 1.25;
+
+        let operator = "+";
+        if (this.i()?.classList?.contains("bottom")) { headHeight *= -1; operator = "-" }
+
+        let style = `calc(${headHeight}px ${operator} var(--padding-sm)*2)`;
+        this.i().style.setProperty("--toast-manager-translate-y", style);
+    }
+
     _updateToasts() {
         let toasts = this.toasts;
 
@@ -162,16 +178,7 @@ export default class ToastManager extends AbstractComponent {
             head._unlock();
             head.resumeTimer();
 
-            if (this.isMounted()) {
-                let headHeight = head.i()?.getBoundingClientRect()?.height ?? 0;
-                if (toasts.length > 1) headHeight *= 1.25;
-
-                let operator = "+";
-                if (this.i()?.classList?.contains("bottom")) { headHeight *= -1; operator = "-" }
-
-                let style = `calc(${headHeight}px ${operator} var(--padding-sm)*2)`;
-                this.i().style.setProperty("--toast-manager-translate-y", style);
-            }
+            this._adjustRenderOffset();
 
             toasts?.slice(1)?.forEach(t => { t.pauseTimer(); t._lock(); });
         } else {

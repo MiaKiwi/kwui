@@ -12,9 +12,10 @@ export default class CardFooter extends AbstractComponent {
      * @param {string} theme Component color theme
      * @param {string} id Component ID
      * @param {string[]} classes Component classes
+     * @param {object} attributes Component attributes
      */
-    constructor(props = {}, children = [], theme = null, id = null, classes = []) {
-        super(props, children, theme, id, classes);
+    constructor(props = {}, children = [], theme = null, id = null, classes = [], attributes = {}) {
+        super(props, children, theme, id, classes, attributes);
     }
 
     static dependencies = [CSSVariables, Typography];

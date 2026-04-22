@@ -11,13 +11,15 @@ export default class AbstractComponent {
      * @param {string} theme Component color theme
      * @param {string} id Component ID
      * @param {string[]} classes Component classes
+     * @param {object} attributes Component attributes
      */
-    constructor(props = {}, children = [], theme = null, id = null, classes = []) {
+    constructor(props = {}, children = [], theme = null, id = null, classes = [], attributes = {}) {
         this._id = id || IDProvider.random();
         this._props = {};
         this._children = [];
         this._theme = null;
         this._classes = [];
+        this._attributes = {};
 
         this._cleanUpFunctions = [];
         this._listeners = {};
@@ -32,6 +34,7 @@ export default class AbstractComponent {
         this.constructor.__registerComponent(this);
 
         this.onCreation();
+        this._dispathEvent("init");
     }
 
     /**
@@ -141,12 +144,38 @@ export default class AbstractComponent {
         if (!this.hasClass(c)) {
             this._classes.push(c);
             this.onClassAdded(c);
+            this._dispathEvent("classes-change");
         }
     }
     removeClass(c) {
         if (this.hasClass(c)) {
             this._classes = this._classes.filter(cls => cls !== c);
             this.onClassRemoved(c);
+            this._dispathEvent("classes-change");
+        }
+    }
+
+    get attributes() { return this._attributes; }
+    setAttributes(attributes) {
+        for (let k in this._attributes) { this.removeAttribute(k); }
+        this._attributes = {};
+        for (let k in attributes) { this.addAttribute(k, attributes[k]); }
+    }
+    hasAttribute(key) { return Object.keys(this.attributes).includes(key); }
+    hasAttributeValue(key, value) { return Object.keys(this.attributes).includes(key) && this.attributes[key] === value; }
+    addAttribute(key, value) {
+        if (!this.hasAttributeValue(key, value)) {
+            this._attributes[key] = value;
+            this.onAttributeAdded(key, value);
+            this._dispathEvent("attributes-change");
+        }
+    }
+    removeAttribute(key) {
+        if (this.hasAttribute(key)) {
+            let value = this._attributes[key];
+            delete this._attributes[key];
+            this.onAttributeRemoved(key, value);
+            this._dispathEvent("attributes-change");
         }
     }
 
@@ -162,6 +191,7 @@ export default class AbstractComponent {
         }
 
         this.onPropsChange(oldProps);
+        this._dispathEvent("props-change");
     }
 
     get children() { return this._children; }
@@ -180,6 +210,7 @@ export default class AbstractComponent {
         this._children = this._children.toSpliced(index, 0, child);
 
         this.onChildAdded(child);
+        this._dispathEvent("children-change");
     }
     removeChild(child) {
         if (!this.hasChild(child)) return;
@@ -187,6 +218,7 @@ export default class AbstractComponent {
         this._children = this._children.filter(c => c !== child);
 
         this.onChildRemoved(child);
+        this._dispathEvent("children-change");
     }
 
     get listeners() { return this._listeners; }
@@ -199,6 +231,7 @@ export default class AbstractComponent {
             this._listeners[event].push(fn);
 
             this.onListenerAdded(event, fn);
+            this._dispathEvent("listeners-change");
         }
     }
     removeListener(event, fn) {
@@ -206,6 +239,7 @@ export default class AbstractComponent {
             this._listeners[event] = (this._listeners[event] ?? []).filter(l => l !== fn);
 
             this.onListenerRemoved(event, fn);
+            this._dispathEvent("listeners-change");
         }
     }
     hasListener(event, fn) {
@@ -227,6 +261,18 @@ export default class AbstractComponent {
         }
 
         this.onThemeChange(oldTheme);
+        this._dispathEvent("theme-change");
+    }
+
+    _dispathEvent(type, options = { bubbles: true, cancelable: true, detail: { comp: this } }) {
+        if (!this.isMounted()) return;
+
+        if (!type.startsWith("comp-")) type = `comp-${type}`;
+
+        let event = new CustomEvent(type, options);
+
+        let wrapper = this.eventDispatchWrapper();
+        if (wrapper instanceof HTMLElement) wrapper.dispatchEvent(event);
     }
 
     clone() {
@@ -271,7 +317,7 @@ export default class AbstractComponent {
                 child.remove();
             } else {
                 Array.from(this.childrenContainer()?.childNodes)?.forEach(node => {
-                    if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() === child.trim()) {
+                    if (node.nodeType === Node.TEXT_NODE && node.textContent === child) {
                         node.remove();
                     }
                 });
@@ -281,7 +327,7 @@ export default class AbstractComponent {
 
     onClassAdded(c) {
         if (this.isMounted()) {
-            let i = this.i();
+            let i = this.classWrapper();
 
             i.classList.add(c);
         }
@@ -289,9 +335,25 @@ export default class AbstractComponent {
 
     onClassRemoved(c) {
         if (this.isMounted()) {
-            let i = this.i();
+            let i = this.classWrapper();
 
             i.classList.remove(c);
+        }
+    }
+
+    onAttributeAdded(key, value) {
+        if (this.isMounted()) {
+            let i = this.attributesWrapper();
+
+            i.setAttribute(key, value);
+        }
+    }
+
+    onAttributeRemoved(key, value) {
+        if (this.isMounted()) {
+            let i = this.attributesWrapper();
+
+            if (i.hasAttribute(key)) i.removeAttribute(key);
         }
     }
 
@@ -305,11 +367,19 @@ export default class AbstractComponent {
     }
 
     onListenerAdded(event, fn) {
-        if (this.isMounted()) this.remount();
+        if (this.isMounted()) {
+            let wrapper = this.listenersWrapper();
+
+            wrapper.addEventListener(event, fn);
+        }
     }
 
     onListenerRemoved(event, fn) {
-        if (this.isMounted()) this.remount();
+        if (this.isMounted()) {
+            let wrapper = this.listenersWrapper();
+
+            wrapper.removeEventListener(event, fn);
+        }
     }
 
     attachChildren(element, children = this.children) {
@@ -350,17 +420,26 @@ export default class AbstractComponent {
         }
     }
 
+    eventDispatchWrapper() { return this.i(); }
+    listenersWrapper() { return this.i(); }
+    attributesWrapper() { return this.i(); }
+    classWrapper() { return this.i(); }
     childrenContainer() { return this.i(); }
     i() { return this?.instance; }
     $(selector) { return this?.parent?.querySelector(selector); }
     $$(selector) { return this?.parent?.querySelectorAll(selector); }
 
     prepare() {
-        if (this._instance) return;
+        if (this.isMounted()) return;
 
         this._instance = this.render();
         this._instance.id = this.id;
         if (this._classes.length > 0) this._instance.classList.add(...this._classes);
+        if (Object.keys(this._attributes).length > 0) {
+            for (let key in this._attributes) {
+                this._instance.setAttribute(key, this._attributes[key]);
+            }
+        }
         this.bindEvents();
     }
 
@@ -378,6 +457,7 @@ export default class AbstractComponent {
         this._isMounted = true;
 
         this.onMount();
+        this._dispathEvent("mount");
     }
 
     remount() {
@@ -395,6 +475,7 @@ export default class AbstractComponent {
         if (!this._isMounted) return;
 
         this.onUnmount();
+        this._dispathEvent("unmount");
 
         this._cleanUpFunctions.forEach(fn => fn());
         this._cleanUpFunctions = [];

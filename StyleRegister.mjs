@@ -54,7 +54,7 @@ export default class StyleRegister {
             rules.push(...component.stylingRules);
         });
 
-        rules = rules.sort((a, b) => {
+        rules = Array.from(new Set(rules)).sort((a, b) => {
             if (a.startsWith("@import") && !b.startsWith("@import")) return -1;
             if (!a.startsWith("@import") && b.startsWith("@import")) return 1;
             return 0;
