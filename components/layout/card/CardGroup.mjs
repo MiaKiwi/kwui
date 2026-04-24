@@ -7,6 +7,13 @@ export default class CardGroup extends AbstractComponent {
     /**
      * Creates a new component
      * @param {object} props Component properties
+     * @param {string} props.layout
+     * @param {string} props.orientation
+     * @param {boolean} props.wrap
+     * @param {string} props.alignContent
+     * @param {string} props.justifyContent
+     * @param {string} props.alignItems
+     * @param {string} props.justifyItems
      * @param {string[]|HTMLElement[]|AbstractElement[]} children Component children
      * @param {string} theme Component color theme
      * @param {string} id Component ID

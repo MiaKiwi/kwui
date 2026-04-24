@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [STVP](https://mia.kiwi/projects/stvp).
 
-## [Unreleased]
+## [26.3.21] - 2026-04-24
 
 ### Added
 
@@ -24,10 +24,17 @@ and this project adheres to [STVP](https://mia.kiwi/projects/stvp).
 - Util methods for text-styling classes: `textThemeClass(theme)`, `sizeClass(size)`, `fontClass(font)`, `alignmentClass(alignment)`, `mutedClass()`, `italicClass()`, `strongClass()`
 - Props JSDoc for tooltip
 - Tag component. Used to create a component with any tag name
+- AbstractComponent methods doc
+- `defaultProps` public method to get component default props
+- `themes` public method to get component themes
+- Card group props doc
 
 ### Changed
 
 - Compact card styling
+- Reorganized AbstractComponent methods
+- `addClass` and `removeClass` now support spread parameters, aka multiple classes
+- `prepare()` method to `_prepare()` to indicate visibility. I would like to change the render and other methods as well, but that would be a massive breaking change
 
 ### Fixed
 

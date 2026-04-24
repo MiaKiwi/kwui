@@ -78,7 +78,7 @@ export default class Text extends AbstractComponent {
     render() {
         let text = document.createElement(this._elementTagName ?? "span");
 
-        if (Object.values(this.constructor._themes).includes(this.theme)) text.classList.add(this.constructor.textThemeClass(this.theme));
+        if (Object.values(this.constructor._themes).includes(this.theme) && this.theme) text.classList.add(this.constructor.textThemeClass(this.theme));
         if (this.props.size) text.classList.add(this.constructor.sizeClass(this.props.size));
         if (this.props.font) text.classList.add(this.constructor.fontClass(this.props.font));
         if (this.props.align) text.classList.add(this.constructor.alignmentClass(this.props.align));

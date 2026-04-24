@@ -7,6 +7,7 @@ export default class Anchor extends AbstractComponent {
      * Creates a new component
      * @param {object} props Component properties
      * @param {string} props.download
+     * @param {boolean} props.subtle
      * @param {string} props.type
      * @param {string} props.href
      * @param {string} props.hreflang
@@ -51,7 +52,11 @@ export default class Anchor extends AbstractComponent {
                 }
             });
 
-            oldProps.subtle !== this.props.subtle && this.props.subtle ? a.classList.add("subtle") : a.classList.remove("subtle");
+            if (oldProps.subtle !== this.props.subtle) {
+                a.classList.remove("subtle");
+
+                if (this.props.subtle) a.classList.add("subtle");
+            }
         }
     }
 
@@ -88,7 +93,7 @@ export default class Anchor extends AbstractComponent {
     static _rawStylingRules = [
         `.anchor{cursor:pointer}`,
         `.anchor.subtle{text-decoration:none}`,
-        `.anchor:hover,.anchor:active,.anchor:focus{text-decoration:underline}`,
+        `.anchor:not(.subtle):hover,.anchor:not(.subtle):active,.anchor:not(.subtle):focus{text-decoration:underline}`,
         `.anchor.kw-{{theme}}{color:var(--{{theme}});}.anchor.kw-{{theme}}:visited,.anchor.kw-{{theme}}:active,.anchor.kw-{{theme}}:hover,.anchor.kw-{{theme}}:focus{color:var(--{{theme}}-50)}`
     ]
 

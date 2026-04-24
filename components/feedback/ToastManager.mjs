@@ -54,7 +54,7 @@ export default class ToastManager extends AbstractComponent {
     }
 
     static _rawStylingRules = [
-        `.toast-manager{position:fixed;width:max-content;z-index:9999;display:flex;flex-wrap:wrap;padding:var(--inline-block-spacing);--toast-manager-translate-x:0;--toast-manager-translate-y:0;transform:translateX(var(--toast-manager-translate-x)) translateY(var(--toast-manager-translate-y));transition: transform var(--transition-medium) ease-in-out;}`,
+        `.toast-manager{position:fixed;width:max-content;z-index:99999;display:flex;flex-wrap:wrap;padding:var(--inline-block-spacing);--toast-manager-translate-x:0;--toast-manager-translate-y:0;transform:translateX(var(--toast-manager-translate-x)) translateY(var(--toast-manager-translate-y));transition: transform var(--transition-medium) ease-in-out;}`,
         `.toast-manager.top{bottom:100%;justify-content:flex-start;flex-direction:column-reverse}`,
         `.toast-manager.bottom{top:100%;justify-content:flex-end;flex-direction:column}`,
         `.toast-manager.left{left:0;align-content:flex-start;}`,

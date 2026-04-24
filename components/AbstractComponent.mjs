@@ -30,12 +30,39 @@ export default class AbstractComponent {
         this.setChildren(children);
         this.setTheme(theme);
         this.setClasses(classes);
+        this.setAttributes(attributes);
 
         this.constructor.__registerComponent(this);
 
         this.onCreation();
         this._dispathEvent("init");
     }
+
+
+
+    get id() { return this._id; }
+    get instance() { return this?._instance; }
+    get parent() { return this?._instance?.parentElement; }
+    get classes() { return this._classes; }
+    get attributes() { return this._attributes; }
+    get props() { return this._props; }
+    get defaultProps() { return this.constructor._defaultProps; }
+    static get defaultProps() { return this._defaultProps; }
+    get children() { return this._children; } set children(children) { this.setChildren(children); }
+    get listeners() { return this._listeners; }
+    get theme() { return this._theme; } set theme(theme) { this.setTheme(theme); }
+    get themes() { return this.constructor._themes; }
+    static get themes() { return this._themes; }
+
+
+
+    /**
+     * Style register where processed component styles are registered
+     * @type {StyleRegister}
+     */
+    static styleRegister = new StyleRegister();
+
+
 
     /**
      * Converts an HTML string to an HTML element
@@ -64,24 +91,62 @@ export default class AbstractComponent {
         );
     }
 
+
+
+    /**
+     * Cached processed styling rules for this component and its sub-classes
+     * @type {WeakMap}
+     * @private
+     */
     static __cachedStylingRulesMap = new WeakMap();
+
+    /**
+     * Cached processed styling rules for this component class only
+     * @type {Set}
+     * @private
+     */
     static get __cachedStylingRules() {
         if (!this.__cachedStylingRulesMap.get(this)) this.__cachedStylingRulesMap.set(this, new Set());
 
         return this.__cachedStylingRulesMap.get(this);
     }
 
-    static styleRegister = new StyleRegister();
 
+
+    /**
+     * Registry of all components of this class and its sub-classes
+     * @type {Set}
+     * @private
+     */
     static __componentsRegistry = new Set();
+
+    /**
+     * Registers a component to the components registry
+     * @param {AbstractComponent} component
+     * @static
+     * @private
+     */
     static __registerComponent(component) {
         if (!this.__componentsRegistry.has(component)) this.__componentsRegistry.add(component);
     }
 
+    /**
+     * Gets the registered components of the class, and sub-classes by default
+     * @param {boolean} includeSubclasses Whether to include sub-classes in results
+     * @returns {AbstractComponent[]}
+     * @static
+     */
     static getComponents(includeSubclasses = true) {
         return Array.from(this.__componentsRegistry ?? []).filter(c => c instanceof this && (includeSubclasses || c.constructor.name === this.name));
     }
 
+    /**
+     * Finds a component by an ID
+     * @param {string} id
+     * @param {boolean} includeSubclasses Whether to include sub-classes in search
+     * @returns {AbstractComponent|null}
+     * @static
+     */
     static findComponentByID(id, includeSubclasses = true) {
         let components = AbstractComponent.getComponents(includeSubclasses);
 
@@ -90,6 +155,11 @@ export default class AbstractComponent {
 
 
 
+    /**
+     * Recursive dependencies of the component class
+     * @type {AbstractComponent[]}
+     * @static
+     */
     static get deepDependencies() {
         let deepDependencies = [...this.dependencies];
 
@@ -100,6 +170,11 @@ export default class AbstractComponent {
         return deepDependencies;
     }
 
+    /**
+     * Processed styling rules of the component class
+     * @type {string[]}
+     * @static
+     */
     static get stylingRules() {
         if (this.__cachedStylingRules.length > 0) return this.__cachedStylingRules;
 
@@ -124,45 +199,89 @@ export default class AbstractComponent {
     };
 
 
-    get id() { return this._id; }
 
+    /**
+     * Checks if the component is mounted and has an instance
+     * @returns {boolean}
+     */
     isMounted() { return this._isMounted && this._instance; }
 
-    themeClass(theme = this.theme) { return `kw-${theme ? theme : 'default'}`; }
-
-    get instance() { return this?._instance; }
-    get parent() { return this?._instance?.parentElement; }
-
-    get classes() { return this._classes; }
+    /**
+     * Removes old and sets new component classes
+     * @param {string[]} classes
+     */
     setClasses(classes) {
         this._classes.forEach(c => this.removeClass(c));
         this._classes = [];
         classes.forEach(c => this.addClass(c));
     }
+
+    /**
+     * Checks if the component has a given class
+     * @param {string} c Class
+     * @returns {boolean}
+     */
     hasClass(c) { return this.classes.includes(c); }
-    addClass(c) {
-        if (!this.hasClass(c)) {
-            this._classes.push(c);
-            this.onClassAdded(c);
-            this._dispathEvent("classes-change");
-        }
-    }
-    removeClass(c) {
-        if (this.hasClass(c)) {
-            this._classes = this._classes.filter(cls => cls !== c);
-            this.onClassRemoved(c);
-            this._dispathEvent("classes-change");
-        }
+
+    /**
+     * Adds a class to the component
+     * @param {...string} c List of classes
+     */
+    addClass(...c) {
+        c?.forEach(cla => {
+            if (!this.hasClass(cla)) {
+                this._classes.push(cla);
+                this.onClassAdded(cla);
+                this._dispathEvent("classes-change");
+            }
+        });
     }
 
-    get attributes() { return this._attributes; }
+    /**
+     * Removes a class from the component
+     * @param {...string} c List of classes
+     */
+    removeClass(...c) {
+        c?.forEach(cla => {
+            if (this.hasClass(cla)) {
+                this._classes = this._classes.filter(cls => cls !== cla);
+                this.onClassRemoved(cla);
+                this._dispathEvent("classes-change");
+            }
+        });
+    }
+
+
+    /**
+     * Removes old and sets new attributes for the component
+     * @param {object} attributes
+     */
     setAttributes(attributes) {
         for (let k in this._attributes) { this.removeAttribute(k); }
         this._attributes = {};
         for (let k in attributes) { this.addAttribute(k, attributes[k]); }
     }
+
+    /**
+     * Checks if the component has an attribute with the given key
+     * @param {string} key
+     * @returns {boolean}
+     */
     hasAttribute(key) { return Object.keys(this.attributes).includes(key); }
+
+    /**
+     * Checks if the component has an attribute with the given key and value
+     * @param {string} key
+     * @param {*} value
+     * @returns {boolean}
+     */
     hasAttributeValue(key, value) { return Object.keys(this.attributes).includes(key) && this.attributes[key] === value; }
+
+    /**
+     * Adds an attribute to the component
+     * @param {string} key
+     * @param {*} value
+     */
     addAttribute(key, value) {
         if (!this.hasAttributeValue(key, value)) {
             this._attributes[key] = value;
@@ -170,6 +289,11 @@ export default class AbstractComponent {
             this._dispathEvent("attributes-change");
         }
     }
+
+    /**
+     * Removes an attribute from the component
+     * @param {string} key
+     */
     removeAttribute(key) {
         if (this.hasAttribute(key)) {
             let value = this._attributes[key];
@@ -179,7 +303,11 @@ export default class AbstractComponent {
         }
     }
 
-    get props() { return this._props; }
+
+    /**
+     * Sets the properties of the component
+     * @param {object} props
+     */
     setProps(props) {
         let oldProps = this._props;
         let p = { ...this.constructor._defaultProps, ...oldProps, ...props };
@@ -194,14 +322,29 @@ export default class AbstractComponent {
         this._dispathEvent("props-change");
     }
 
-    get children() { return this._children; }
-    set children(children) { this.setChildren(children); }
+
+    /**
+     * Removes old and sets new children of the component
+     * @param {string[]|HTMLElement[]|AbstractElement[]} children
+     */
     setChildren(children) {
         this._children.forEach(c => this.removeChild(c));
         this._children = [];
         children.forEach(c => this.addChild(c));
     }
+
+    /**
+     * Checks if the component has a given child
+     * @param {string[]|HTMLElement[]|AbstractElement[]} child
+     * @returns {boolean}
+     */
     hasChild(child) { return this.children.includes(child); }
+
+    /**
+     * Adds a child to the component
+     * @param {string[]|HTMLElement[]|AbstractElement[]} child
+     * @param {number} [index=-1] Where to insert the new child. Leave empty to append it
+     */
     addChild(child, index = -1) {
         if (child === this) throw new Error(`${this.constructor.name} (${this.id}): Cannot nest an element inside itself`);
         if (this.hasChild(child)) return;
@@ -212,6 +355,11 @@ export default class AbstractComponent {
         this.onChildAdded(child);
         this._dispathEvent("children-change");
     }
+
+    /**
+     * Removes a child from the component
+     * @param {string[]|HTMLElement[]|AbstractElement[]} child
+     */
     removeChild(child) {
         if (!this.hasChild(child)) return;
 
@@ -221,7 +369,12 @@ export default class AbstractComponent {
         this._dispathEvent("children-change");
     }
 
-    get listeners() { return this._listeners; }
+
+    /**
+     * Adds a listener to the component
+     * @param {string} event Event type
+     * @param {Function} fn Callback
+     */
     addListener(event, fn) {
         if (!this.hasListener(event, fn)) {
             if (!this._listeners[event]) {
@@ -234,6 +387,12 @@ export default class AbstractComponent {
             this._dispathEvent("listeners-change");
         }
     }
+
+    /**
+     * Removes a listener from the component
+     * @param {string} event Event type
+     * @param {Function} fn Callback
+     */
     removeListener(event, fn) {
         if (this.hasListener(event, fn)) {
             this._listeners[event] = (this._listeners[event] ?? []).filter(l => l !== fn);
@@ -242,6 +401,13 @@ export default class AbstractComponent {
             this._dispathEvent("listeners-change");
         }
     }
+
+    /**
+     * Checks if the component has a given listener
+     * @param {string} event Event type
+     * @param {Function} fn Callback
+     * @returns {boolean}
+     */
     hasListener(event, fn) {
         return (
             Object.keys(this._listeners).includes(event) &&
@@ -249,8 +415,27 @@ export default class AbstractComponent {
         );
     }
 
-    get theme() { return this._theme; }
-    set theme(theme) { this.setTheme(theme); }
+    /**
+     * Dispatches a custom event from the component instance
+     * @param {string} type Event type, automatically prepended with 'comp-'
+     * @param {object} options Event options
+     */
+    _dispathEvent(type, options = { bubbles: true, cancelable: true, detail: { comp: this } }) {
+        if (!this.isMounted()) return;
+
+        if (!type.startsWith("comp-")) type = `comp-${type}`;
+
+        let event = new CustomEvent(type, options);
+
+        let wrapper = this.eventDispatchWrapper();
+        if (wrapper instanceof HTMLElement) wrapper.dispatchEvent(event);
+    }
+
+
+    /**
+     * Sets the theme of the component
+     * @param {string} theme 
+     */
     setTheme(theme) {
         let oldTheme = this._theme;
 
@@ -264,38 +449,27 @@ export default class AbstractComponent {
         this._dispathEvent("theme-change");
     }
 
-    _dispathEvent(type, options = { bubbles: true, cancelable: true, detail: { comp: this } }) {
-        if (!this.isMounted()) return;
+    /**
+     * Gets the corresponding CSS class for a component style
+     * @param {string} [theme=this.theme] Desired theme class. Leave empty for current theme
+     * @returns {string}
+     */
+    themeClass(theme = this.theme) { return `kw-${theme ? theme : 'default'}`; }
 
-        if (!type.startsWith("comp-")) type = `comp-${type}`;
 
-        let event = new CustomEvent(type, options);
 
-        let wrapper = this.eventDispatchWrapper();
-        if (wrapper instanceof HTMLElement) wrapper.dispatchEvent(event);
-    }
-
-    clone() {
-        let clonedChildren = this._children.map(child => {
-            if (child instanceof AbstractComponent) {
-                return child.clone();
-            }
-            return child;
-        });
-
-        return new this.constructor(
-            { ...this._props },
-            clonedChildren,
-            this._theme,
-            null,
-            this._classes
-        );
-    }
-
+    /**
+     * Triggered after component properties are changed
+     * @param {object} oldProps Previous properties
+     */
     onPropsChange(oldProps) {
         if (this.isMounted() && JSON.stringify(this._props) !== JSON.stringify(oldProps)) this.remount();
     }
 
+    /**
+     * Triggered after a child is added
+     * @param {string[]|HTMLElement[]|AbstractElement[]} child Child added
+     */
     onChildAdded(child) {
         if (this.isMounted()) {
             if (child instanceof AbstractComponent) {
@@ -309,6 +483,10 @@ export default class AbstractComponent {
         };
     }
 
+    /**
+     * Triggered after a child is removed
+     * @param {string[]|HTMLElement[]|AbstractElement[]} child Child removed
+     */
     onChildRemoved(child) {
         if (this.isMounted()) {
             if (child instanceof AbstractComponent) {
@@ -325,6 +503,10 @@ export default class AbstractComponent {
         }
     }
 
+    /**
+     * Triggered after a class is added
+     * @param {string} c Class added
+     */
     onClassAdded(c) {
         if (this.isMounted()) {
             let i = this.classWrapper();
@@ -333,6 +515,10 @@ export default class AbstractComponent {
         }
     }
 
+    /**
+     * Triggered after a class is removed
+     * @param {string} c Class removed
+     */
     onClassRemoved(c) {
         if (this.isMounted()) {
             let i = this.classWrapper();
@@ -341,6 +527,11 @@ export default class AbstractComponent {
         }
     }
 
+    /**
+     * Triggered after an attribute is added
+     * @param {string} key
+     * @param {*} value
+     */
     onAttributeAdded(key, value) {
         if (this.isMounted()) {
             let i = this.attributesWrapper();
@@ -349,6 +540,11 @@ export default class AbstractComponent {
         }
     }
 
+    /**
+     * Triggered after an attribute is removed
+     * @param {string} key
+     * @param {*} value
+     */
     onAttributeRemoved(key, value) {
         if (this.isMounted()) {
             let i = this.attributesWrapper();
@@ -357,6 +553,10 @@ export default class AbstractComponent {
         }
     }
 
+    /**
+     * Triggered after the theme is changed
+     * @param {string} oldTheme Previous theme
+     */
     onThemeChange(oldTheme) {
         if (this.isMounted() && oldTheme !== this.theme) {
             let i = this.i();
@@ -366,14 +566,25 @@ export default class AbstractComponent {
         };
     }
 
+    /**
+     * Triggered after a listener is added
+     * @param {string} event Event type
+     * @param {Function} fn Callback
+     */
     onListenerAdded(event, fn) {
         if (this.isMounted()) {
             let wrapper = this.listenersWrapper();
 
             wrapper.addEventListener(event, fn);
+            this._cleanUpFunctions.push(() => { wrapper.removeEventListener(event, fn); });
         }
     }
 
+    /**
+     * Triggered after a listener is removed
+     * @param {string} event Event type
+     * @param {Function} fn Callback
+     */
     onListenerRemoved(event, fn) {
         if (this.isMounted()) {
             let wrapper = this.listenersWrapper();
@@ -382,6 +593,64 @@ export default class AbstractComponent {
         }
     }
 
+
+
+    /**
+     * Returns the node where events are dispatched from
+     * @returns {HTMLElement|null}
+     */
+    eventDispatchWrapper() { return this.i(); }
+
+    /**
+     * Returns the node where event listeners are attached
+     * @returns {HTMLElement|null}
+     */
+    listenersWrapper() { return this.i(); }
+
+    /**
+     * Returns the node where attributes are set
+     * @returns {HTMLElement|null}
+     */
+    attributesWrapper() { return this.i(); }
+
+    /**
+     * Returns the node where classes are set
+     * @returns {HTMLElement|null}
+     */
+    classWrapper() { return this.i(); }
+
+    /**
+     * Returns the node where children are attached
+     * @returns {HTMLElement|null}
+     */
+    childrenContainer() { return this.i(); }
+
+    /**
+     * Returns the component instance
+     * @returns {HTMLElement|null}
+     */
+    i() { return this?.instance; }
+
+    /**
+     * Runs querySelector on the parent of the component instance
+     * @param {string} selector The query selector
+     * @returns {Element|null}
+     */
+    $(selector) { return this?.parent?.querySelector(selector); }
+
+    /**
+     * Runs querySelectorAll on the parent of the component instance
+     * @returns {NodeList|null}
+     */
+    $$(selector) { return this?.parent?.querySelectorAll(selector); }
+
+
+
+    /**
+     * Attaches the children of the component to an element
+     * @param {Element} element Container
+     * @param {string[]|HTMLElement[]|AbstractElement[]} [children=this.children] List of children, component children by default
+     */
     attachChildren(element, children = this.children) {
         for (let child of children) {
             if (child instanceof AbstractComponent) {
@@ -395,6 +664,10 @@ export default class AbstractComponent {
         }
     }
 
+    /**
+     * Detaches children from an element
+     * @param {Element} element Container
+     */
     detachChildren(element) {
         [
             ...element.children,
@@ -411,6 +684,11 @@ export default class AbstractComponent {
         element.innerHTML = "";
     }
 
+    /**
+     * Attaches the listeners of the component to an element
+     * @param {Element} element Container
+     * @param {object<string, Function>} [listeners=this.listeners] Event listeners, component listeners by default
+     */
     attachListeners(element, listeners = this._listeners) {
         for (let event of Object.keys(listeners)) {
             for (let fn of listeners[event]) {
@@ -420,24 +698,45 @@ export default class AbstractComponent {
         }
     }
 
-    eventDispatchWrapper() { return this.i(); }
-    listenersWrapper() { return this.i(); }
-    attributesWrapper() { return this.i(); }
-    classWrapper() { return this.i(); }
-    childrenContainer() { return this.i(); }
-    i() { return this?.instance; }
-    $(selector) { return this?.parent?.querySelector(selector); }
-    $$(selector) { return this?.parent?.querySelectorAll(selector); }
 
-    prepare() {
+
+    /**
+     * Creates a copy of the component
+     * @returns {AbstractComponent} Clone
+     */
+    clone() {
+        let clonedChildren = this._children.map(child => {
+            if (child instanceof AbstractComponent) {
+                return child.clone();
+            }
+            return child;
+        });
+
+        return new this.constructor(
+            { ...this._props },
+            clonedChildren,
+            this._theme,
+            null,
+            this._classes,
+            this._attributes
+        );
+    }
+
+    /**
+     * Renders, adds classes, adds attributes, and binds events to the component instance
+     * 
+     * Ignored if the component is already mounted
+     * @private
+     */
+    _prepare() {
         if (this.isMounted()) return;
 
         this._instance = this.render();
         this._instance.id = this.id;
-        if (this._classes.length > 0) this._instance.classList.add(...this._classes);
+        if (this._classes.length > 0) this.classWrapper().classList.add(...this._classes);
         if (Object.keys(this._attributes).length > 0) {
             for (let key in this._attributes) {
-                this._instance.setAttribute(key, this._attributes[key]);
+                this.attributesWrapper().setAttribute(key, this._attributes[key]);
             }
         }
         this.bindEvents();
@@ -445,13 +744,15 @@ export default class AbstractComponent {
 
     /**
      * Mounts the component to an element
-     * @param {HTMLElement} parent
+     * 
+     * If already mounted, unmounts it from its last parent
+     * @param {Element} parent
      * @param {boolean} [prepend=false]
      */
     mount(parent, prepend = false) {
         if (this.isMounted()) this.unmount();
 
-        this.prepare();
+        this._prepare();
         if (prepend) { parent.prepend(this.instance) } else { parent.appendChild(this.instance) }
         this.constructor.styleRegister.register(this.constructor);
         this._isMounted = true;
@@ -460,6 +761,9 @@ export default class AbstractComponent {
         this._dispathEvent("mount");
     }
 
+    /**
+     * Unmounts and remounts the component to its parent
+     */
     remount() {
         if (this.isMounted()) {
             let parent = this.parent;
@@ -472,7 +776,7 @@ export default class AbstractComponent {
      * Unmounts the component
      */
     unmount() {
-        if (!this._isMounted) return;
+        if (!this.isMounted()) return;
 
         this.onUnmount();
         this._dispathEvent("unmount");
@@ -484,7 +788,6 @@ export default class AbstractComponent {
 
         this._instance?.remove();
         this._instance = null;
-        // this.constructor.styleRegister.unregister(this.constructor);
         this._isMounted = false;
     }
 
@@ -493,6 +796,7 @@ export default class AbstractComponent {
     /**
      * Themes the component is available in
      * @type {string[]}
+     * @private
      */
     static _themes = [
         'bg',
@@ -511,6 +815,7 @@ export default class AbstractComponent {
     /**
      * Default properties of the component
      * @type {object}
+     * @private
      */
     static _defaultProps = {};
 
@@ -523,17 +828,50 @@ export default class AbstractComponent {
         return true;
     }
 
+    /**
+     * Styling rules for the component.
+     * 
+     * Use '{{theme}}' to generate rules based on available themes for the component, e.g.:
+     * > `.component.kw-{{theme}} { color: var(--{{theme}}) } -> .component.kw-primary { color: var(--primary) }`
+     * @type {string[]}
+     * @private
+     */
     static _rawStylingRules = [];
 
+    /**
+     * Component dependencies
+     * @type {AbstractComponent[]}
+     */
     static dependencies = [];
 
+    /**
+     * Creates the component instance and attaches its children
+     * @returns {Element}
+     * @private
+     */
     render() { }
 
+    /**
+     * Attaches event listeners to the instance
+     * @private
+     */
     bindEvents() { }
 
+    /**
+     * Triggered when the component is instantiated (created)
+     * @private
+     */
     onCreation() { }
 
+    /**
+     * Triggered after the component is mounted
+     * @private
+     */
     onMount() { }
 
+    /**
+     * Triggered before the component is unmounted
+     * @private
+     */
     onUnmount() { }
 }
