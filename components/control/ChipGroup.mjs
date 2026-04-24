@@ -84,13 +84,13 @@ export default class ChipGroup extends AbstractComponent {
         this.overflowIndicator.unmount();
     }
 
-    onChildAdded() {
-        super.onChildAdded();
+    onChildAdded(child) {
+        super.onChildAdded(child);
         this.updateOverflow();
     }
 
-    onChildRemoved() {
-        super.onChildRemoved();
+    onChildRemoved(child) {
+        super.onChildRemoved(child);
         this.updateOverflow();
     }
 

@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [STVP](https://mia.kiwi/projects/stvp).
 
+## [Unreleased]
+
+### Fixed
+
+- Chip group not passing child to child added/removed trigger
+
+
+
 ## [26.3.21] - 2026-04-24
 
 ### Added
