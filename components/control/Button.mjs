@@ -94,7 +94,7 @@ export default class Button extends AbstractComponent {
         `.btn.outline:not(.disabled):not(:disabled):active,.btn.outline.active{background-color:var(--btn-active-bg);color:var(--btn-active-fg);border-color:var(--btn-active-bg)}`,
         `.btn.empty{background-color:transparent;color:var(--btn-bg)}`,
         `.btn.empty:not(.disabled):not(:disabled):active,.btn.empty.active{background-color:var(--btn-active-bg);color:var(--btn-active-fg)}`,
-        `.btn.disabled,.btn:disabled{opacity:var(--disabled-transparency);cursor:not-allowed;transform:none;pointer-events:none}`,
+        `.btn.disabled,.btn:disabled{opacity:var(--disabled-transparency);cursor:not-allowed;transform:none}`,
         `.btn.icon-only{--btn-pad-v: var(--padding-xs);--btn-pad-h: var(--padding-xs)}`,
         `.btn.circular{--border-radius:9999em}`,
         `.btn.square{--border-radius:0}`,

@@ -37,8 +37,8 @@ export default class Accordion extends AbstractComponent {
         `.accordion{--accordion-bg:var(--bg);--accordion-border:var(--border);box-shadow:var(--box-shadow);background-color:var(--accordion-bg);border:var(--border-thin-width) solid var(--accordion-border);border-radius:0;padding:var(--padding-sm);margin:var(--padding-sm)}`,
         `.accordion.borderless{border:none;box-shadow:none}`,
         `.accordion.kw-{{theme}} .accordion-mark{color:var(--{{theme}})}`,
-        `.accordion>:not(.accordion-sum){transition: max-height var(--transition-slow) ease-in-out;max-height:1000px;overflow:hidden}`,
-        `.accordion:not([open])>:not(.accordion-sum){max-height:0;transition:none}`
+        // `.accordion>:not(.accordion-sum){transition: max-height var(--transition-slow) ease-in-out;max-height:1000px;overflow:hidden}`,
+        // `.accordion:not([open])>:not(.accordion-sum){max-height:0;transition:none}`
     ]
 
     onPropsChange(oldProps) {

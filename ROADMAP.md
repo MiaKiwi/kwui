@@ -33,7 +33,8 @@ These features are inspired mostly by previous versions of KWUI, and [Material U
   - [x] Avatar group
   - [x] Icons
   - [ ] Carousel
-  - [ ] Table
+  - [x] Table
+  - [ ] Dynamic table
   - [x] Tooltip
 - [x] Feedback
   - [x] Callout

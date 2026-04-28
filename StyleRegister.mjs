@@ -47,7 +47,7 @@ export default class StyleRegister {
         danger: "negative"
     }
 
-    apply() {
+    rules() {
         let rules = [];
 
         this._register.forEach(component => {
@@ -60,6 +60,15 @@ export default class StyleRegister {
             return 0;
         });
 
+        return rules;
+    }
+
+    string() {
+        return this.rules().join("");
+    }
+
+    apply() {
+
         let styleTagID = this._styleTagID;
         let styleTag = document.getElementById(styleTagID);
         if (!styleTag) {
@@ -68,6 +77,6 @@ export default class StyleRegister {
             document.head.appendChild(styleTag);
         }
 
-        styleTag.innerHTML = rules.join("");
+        styleTag.innerHTML = this.string();
     }
 }

@@ -152,7 +152,7 @@ export default class Toast extends AbstractComponent {
     static _rawStylingRules = [
         `.toast{--toast-accent:var(--primary);background-color:var(--bg);position:relative;width:70ch;max-width:calc(100vw*.9);border:var(--border-thin-width) solid var(--border);border-radius:var(--border-roundness);margin:var(--padding-sm) 0;padding:var(--padding-sm) var(--padding-sm);box-shadow:var(--box-shadow);gap:var(--letter-spacing);display:grid;grid-template-areas:"icon content dismiss";grid-template-columns:auto 1fr auto;align-items:baseline}`,
         `.toast.kw-{{theme}}{--toast-accent:var(--{{theme}})}`,
-        `.toast:before{content:'';position:absolute;bottom:0;left:calc(var(--border-thin-width)*0.75);width:calc(attr(data-progress %, 100%) - var(--border-thin-width));max-width:100%;min-width:0%;height:var(--border-thin-width);border-bottom-left-radius:99em;border-bottom-right-radius:99em;z-index:0;background-color:var(--toast-accent);transition:width var(--transition-fast) linear}`,
+        `.toast:before{content:'';position:absolute;bottom:0;left:calc(var(--border-thin-width)*0.75);width:calc(attr(data-progress %, 100%) - var(--border-thin-width));max-width:100%;min-width:0%;height:calc(var(--border-thin-width)*1.5);border-bottom-left-radius:99em;border-bottom-right-radius:99em;z-index:0;background-color:var(--toast-accent);transition:width var(--transition-fast) linear}`,
     ];
 
     static dependencies = [CSSVariables, Animations];

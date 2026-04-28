@@ -5,11 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [STVP](https://mia.kiwi/projects/stvp).
 
-## [Unreleased]
+## [26.3.22] - 2026-04-28
+
+### Added
+
+- `rules()` and `string()` methods to `StyleRegister` to get all compiled rules
+- `Event` 'enum' class for events
+- `_dispatchEvent()` method to components, because I mistyped dispatch last time. Oops
+- `attr()` and `listen()` methods to comps. Return the component for method chaining
+- Table
+- Table cell
+- Table data cell
+- Table head cell
+- Table pagination controller *(i thought i was gonna die. idk why offsets and limits seemed so complicated today)*
+- Table row
+
+### Changed
+
+- Components with no default props are not remounted when props are changed
+- `onThemeChange()` method to use `classWrapper()` instead of instance root
+- Added wrapping to button groups
+
+### Deprecated
+
+- `_dispathEvent()` method
 
 ### Fixed
 
 - Chip group not passing child to child added/removed trigger
+
+### Removed
+
+- Accordion opening animation, didnt work anyway
 
 
 

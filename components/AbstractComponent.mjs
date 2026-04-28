@@ -1,3 +1,4 @@
+import Event from "../helpers/Event.mjs";
 import IDProvider from "../helpers/IDProvider.mjs";
 import StyleRegister from "../StyleRegister.mjs";
 
@@ -35,7 +36,7 @@ export default class AbstractComponent {
         this.constructor.__registerComponent(this);
 
         this.onCreation();
-        this._dispathEvent("init");
+        this._dispatchEvent(Event.INIT);
     }
 
 
@@ -232,7 +233,7 @@ export default class AbstractComponent {
             if (!this.hasClass(cla)) {
                 this._classes.push(cla);
                 this.onClassAdded(cla);
-                this._dispathEvent("classes-change");
+                this._dispatchEvent(Event.CLASSES_CHANGE);
             }
         });
     }
@@ -246,7 +247,7 @@ export default class AbstractComponent {
             if (this.hasClass(cla)) {
                 this._classes = this._classes.filter(cls => cls !== cla);
                 this.onClassRemoved(cla);
-                this._dispathEvent("classes-change");
+                this._dispatchEvent(Event.CLASSES_CHANGE);
             }
         });
     }
@@ -286,8 +287,20 @@ export default class AbstractComponent {
         if (!this.hasAttributeValue(key, value)) {
             this._attributes[key] = value;
             this.onAttributeAdded(key, value);
-            this._dispathEvent("attributes-change");
+            this._dispatchEvent(Event.ATTRIBUTES_CHANGE);
         }
+    }
+
+    /**
+     * Adds an attribute  and returns the component for method chaining
+     * @param {string} key
+     * @param {*} value
+     * @returns {AbstractComponent}
+     */
+    attr(key, value) {
+        this.addAttribute(key, value);
+
+        return this;
     }
 
     /**
@@ -299,7 +312,7 @@ export default class AbstractComponent {
             let value = this._attributes[key];
             delete this._attributes[key];
             this.onAttributeRemoved(key, value);
-            this._dispathEvent("attributes-change");
+            this._dispatchEvent(Event.ATTRIBUTES_CHANGE);
         }
     }
 
@@ -319,7 +332,7 @@ export default class AbstractComponent {
         }
 
         this.onPropsChange(oldProps);
-        this._dispathEvent("props-change");
+        this._dispatchEvent(Event.PROPS_CHANGE);
     }
 
 
@@ -353,7 +366,7 @@ export default class AbstractComponent {
         this._children = this._children.toSpliced(index, 0, child);
 
         this.onChildAdded(child);
-        this._dispathEvent("children-change");
+        this._dispatchEvent(Event.CHILDREN_CHANGE);
     }
 
     /**
@@ -366,7 +379,7 @@ export default class AbstractComponent {
         this._children = this._children.filter(c => c !== child);
 
         this.onChildRemoved(child);
-        this._dispathEvent("children-change");
+        this._dispatchEvent(Event.CHILDREN_CHANGE);
     }
 
 
@@ -384,8 +397,20 @@ export default class AbstractComponent {
             this._listeners[event].push(fn);
 
             this.onListenerAdded(event, fn);
-            this._dispathEvent("listeners-change");
+            this._dispatchEvent(Event.LISTENERS_CHANGE);
         }
+    }
+
+    /**
+     * Adds a listener and returns the component for method chaining
+     * @param {string} event Event type
+     * @param {Function} fn Callback
+     * @returns {AbstractComponent}
+     */
+    listen(event, fn) {
+        this.addListener(event, fn);
+
+        return this;
     }
 
     /**
@@ -398,7 +423,7 @@ export default class AbstractComponent {
             this._listeners[event] = (this._listeners[event] ?? []).filter(l => l !== fn);
 
             this.onListenerRemoved(event, fn);
-            this._dispathEvent("listeners-change");
+            this._dispatchEvent(Event.LISTENERS_CHANGE);
         }
     }
 
@@ -417,18 +442,35 @@ export default class AbstractComponent {
 
     /**
      * Dispatches a custom event from the component instance
-     * @param {string} type Event type, automatically prepended with 'comp-'
+     * @param {string} type Event type
      * @param {object} options Event options
      */
-    _dispathEvent(type, options = { bubbles: true, cancelable: true, detail: { comp: this } }) {
+    _dispatchEvent(type, options = {}) {
         if (!this.isMounted()) return;
 
-        if (!type.startsWith("comp-")) type = `comp-${type}`;
+        options = {
+            bubbles: true,
+            cancelable: true,
+            detail: { comp: this },
+            ...options
+        }
+
+        if (!Object.values(Event.list).includes(type)) console.warn(`${this.constructor.name} (${this.id}): Non-standard event type '${type}' used`);
 
         let event = new CustomEvent(type, options);
 
         let wrapper = this.eventDispatchWrapper();
         if (wrapper instanceof HTMLElement) wrapper.dispatchEvent(event);
+    }
+
+    /**
+     * Old method for dispatching custom events. Please do not use
+     * @param {string} type Event type
+     * @param {object} options Event options
+     * @deprecated A new method with the correct name is now available
+     */
+    _dispathEvent(type, options = { bubbles: true, cancelable: true, detail: { comp: this } }) {
+        this._dispatchEvent(type, options);
     }
 
 
@@ -446,7 +488,7 @@ export default class AbstractComponent {
         }
 
         this.onThemeChange(oldTheme);
-        this._dispathEvent("theme-change");
+        this._dispatchEvent(Event.THEME_CHANGE);
     }
 
     /**
@@ -463,6 +505,8 @@ export default class AbstractComponent {
      * @param {object} oldProps Previous properties
      */
     onPropsChange(oldProps) {
+        if (Object.keys(this.constructor._defaultProps).length < 1) return;
+
         if (this.isMounted() && JSON.stringify(this._props) !== JSON.stringify(oldProps)) this.remount();
     }
 
@@ -559,7 +603,7 @@ export default class AbstractComponent {
      */
     onThemeChange(oldTheme) {
         if (this.isMounted() && oldTheme !== this.theme) {
-            let i = this.i();
+            let i = this.classWrapper();
 
             i.classList.remove(this.themeClass(oldTheme));
             i.classList.add(this.themeClass());
@@ -758,7 +802,7 @@ export default class AbstractComponent {
         this._isMounted = true;
 
         this.onMount();
-        this._dispathEvent("mount");
+        this._dispatchEvent(Event.MOUNT);
     }
 
     /**
@@ -779,7 +823,7 @@ export default class AbstractComponent {
         if (!this.isMounted()) return;
 
         this.onUnmount();
-        this._dispathEvent("unmount");
+        this._dispatchEvent(Event.UNMOUNT);
 
         this._cleanUpFunctions.forEach(fn => fn());
         this._cleanUpFunctions = [];
