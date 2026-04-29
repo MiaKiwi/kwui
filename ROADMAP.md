@@ -34,7 +34,7 @@ These features are inspired mostly by previous versions of KWUI, and [Material U
   - [x] Icons
   - [ ] Carousel
   - [x] Table
-  - [ ] Dynamic table
+  - [x] Dynamic table
   - [x] Tooltip
 - [x] Feedback
   - [x] Callout

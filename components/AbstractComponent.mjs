@@ -205,7 +205,7 @@ export default class AbstractComponent {
      * Checks if the component is mounted and has an instance
      * @returns {boolean}
      */
-    isMounted() { return this._isMounted && this._instance; }
+    isMounted() { return this._isMounted && this._instance !== null; }
 
     /**
      * Removes old and sets new component classes

@@ -31,6 +31,8 @@ export default class TablePagination extends ButtonGroup {
         this._nextPageBtn = this._createNextPageBtn();
         this._lastPageBtn = this._createLastPageBtn();
         this._pageIndicator = this._createPageIndicator();
+
+        this.props.table.addController(this);
     }
 
     static _defaultProps = {
@@ -43,6 +45,15 @@ export default class TablePagination extends ButtonGroup {
             super.validateProps(props) &&
             props.table instanceof Table
         );
+    }
+
+    onPropsChange(oldProps) {
+        super.onPropsChange(oldProps);
+
+        if (oldProps.table !== this.props.table) {
+            oldProps.table?.removeController(this);
+            this.props.table?.addController(this);
+        }
     }
 
     _updateControllers() {
@@ -167,6 +178,10 @@ export default class TablePagination extends ButtonGroup {
         });
 
         return btn;
+    }
+
+    receiveUpdateFromTable(details = {}) {
+        this._updateControllers();
     }
 
     render() {

@@ -13,6 +13,7 @@ export default class TableHead extends TableCell {
      * @param {object} props Component properties
      * @param {*} props.sortValue
      * @param {string} props.sortKey
+     * @param {null|Function} props.renderer
      * @param {boolean} props.sortable
      * @param {boolean} props.sortAsc
      * @param {string[]|HTMLElement[]|AbstractElement[]} children Component children
@@ -36,6 +37,8 @@ export default class TableHead extends TableCell {
             this.setProps({ sortAsc: !this.props.sortAsc });
             this._dispathEvent(Event.TABLE_SORT_CHANGE);
         }).addClass("sort-btn");
+
+        this._tagName = "th";
     }
 
     static _defaultProps = {
@@ -68,15 +71,6 @@ export default class TableHead extends TableCell {
             oldProps.sortable !== this.props.sortable ||
             oldProps.sortAsc !== this.props.sortAsc
         ) this._updateSortBtn();
-    }
-
-    render() {
-        let el = document.createElement("th");
-
-        this.attachChildren(el);
-        this.attachListeners(el);
-
-        return el;
     }
 
     _updateSortBtn() {

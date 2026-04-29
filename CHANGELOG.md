@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [STVP](https://mia.kiwi/projects/stvp).
 
+## [26.3.23] - 2026-04-29
+
+### Added
+
+- Dynamic table. idk what possessed me to do that, but i did
+- Overwritable offset properties for tables
+- Controllers registry to tables
+- Cell content renderer to table cells
+
+### Changed
+
+- `isMounted()` method to check if `_instance` property is not null
+- `_updatePagination` method to be responsible for dispatching pagination events instead of the props change handler
+
+
+
 ## [26.3.22] - 2026-04-28
 
 ### Added

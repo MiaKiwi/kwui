@@ -4,6 +4,7 @@ import AbstractComponent from "../../AbstractComponent.mjs";
 import CSSVariables from "../../core/CSSVariables.mjs";
 import Text from "../../core/typo/Text.mjs";
 import Typography from "../../core/Typography.mjs";
+import Loader from "../../feedback/Loader.mjs";
 import TagComponent from "../../util/TagComponent.mjs";
 import Avatar from "../avatar/Avatar.mjs";
 import FontawesomeIcon from "../icons/FontawesomeIcon.mjs";
@@ -60,6 +61,13 @@ export default class Table extends AbstractComponent {
         });
 
         this.headerCells?.forEach(c => c.setProps({ sortable: this.props.sortable && (typeof c.props?.sortKey === "string") }));
+
+        this._controllers = new Set();
+        this._minOffset = null;
+        this._previousOffset = null;
+        this._nextOffset = null;
+        this._maxOffset = null;
+        this._total = null;
     }
 
     static _defaultProps = {
@@ -73,16 +81,23 @@ export default class Table extends AbstractComponent {
     }
 
     get limit() { return this.props.limit; }
+    get total() { return this._total ?? this.dataRows.length; }
 
-    get minOffset() { return 0; }
+    get minOffset() {
+        return this._minOffset ?? 0;
+    }
     get previousOffset() {
+        if (this._previousOffset) return this._previousOffset;
         if (this.limit < 1) return null;
 
         let previous = this.offset - this.limit;
         return previous >= this.minOffset ? previous : null;
     }
+
     get offset() { return this.props.offset; }
+
     get nextOffset() {
+        if (this._nextOffset) return this._nextOffset;
         if (this.limit < 1) return null;
 
         let next = this.offset + this.limit;
@@ -90,6 +105,7 @@ export default class Table extends AbstractComponent {
         return next <= this.maxOffset ? next : null;
     }
     get maxOffset() {
+        if (this._maxOffset) return this._maxOffset;
         if (this.limit < 1) return 0;
 
         let max = (this.limit * this.pages) - this.limit;
@@ -97,9 +113,9 @@ export default class Table extends AbstractComponent {
         return max < 0 ? 0 : max;
     }
 
-    get page() { return (this.offset / this.limit) + 1; }
+    get page() { return Math.ceil((this.offset / this.limit) + 1); }
     get pages() {
-        return Math.ceil(this.dataRows.length / this.limit);
+        return Math.ceil(this.total / this.limit);
     }
 
     get rows() { return this.children?.filter(c => c instanceof TableRow); }
@@ -121,7 +137,7 @@ export default class Table extends AbstractComponent {
     get visibleDataRows() {
         if (
             this.props.limit < 1 ||
-            this.props.limit >= this.dataRows.length
+            this.props.limit >= this.total
         ) return this.dataRows;
 
         if (this.offset > this.maxOffset) return [];
@@ -135,7 +151,7 @@ export default class Table extends AbstractComponent {
     get hiddenDataRows() {
         if (
             this.props.limit < 1 ||
-            this.props.limit >= this.dataRows.length
+            this.props.limit >= this.total
         ) return [];
 
         if (this.offset > this.maxOffset) return this.dataRows;
@@ -170,6 +186,26 @@ export default class Table extends AbstractComponent {
             if (valA > valB) comp = 1;
 
             return this.props.sortAsc ? comp : -comp;
+        });
+    }
+
+    get controllers() { return this._controllers; }
+
+    addController(controller) {
+        if (this._controllers.has(controller)) return;
+
+        this._controllers.add(controller);
+    }
+
+    removeController(controller) {
+        if (!this._controllers.has(controller)) return;
+
+        this._controllers.delete(controller);
+    }
+
+    _notifyControllers(details = {}) {
+        this.controllers?.forEach(controller => {
+            if (typeof controller.receiveUpdateFromTable === "function") controller.receiveUpdateFromTable(details);
         });
     }
 
@@ -216,7 +252,6 @@ export default class Table extends AbstractComponent {
             oldProps.limit !== this.props.limit
         ) {
             this._update();
-            this._dispatchEvent(Event.TABLE_PAGINATION_CHANGE);
         }
     }
 
@@ -255,14 +290,25 @@ export default class Table extends AbstractComponent {
     }
 
     _update() {
-        this._updateOrder();
-        this._updatePagination();
+        let loader = new Loader();
+        if (this.isMounted()) loader.mount(this.i(), true);
+
+        try {
+            this._updateOrder();
+            this._updatePagination();
+        } catch (err) {
+            console.error(err);
+        } finally {
+            loader.unmount();
+        }
     }
 
     _updateOrder() {
         let ordered = this._children.slice().sort(this.sortCallback);
 
         this.setChildren(ordered);
+
+        this._notifyControllers({ type: 'order' });
     }
 
     _updatePagination() {
@@ -273,7 +319,7 @@ export default class Table extends AbstractComponent {
 
         this._emptyRow.unmount();
 
-        if (visible.length < 1 && hidden.length === this.dataRows.length) {
+        if (visible.length < 1 && hidden.length === this.total) {
             this._emptyRow.mount(this.childrenContainer());
         }
 
@@ -286,5 +332,14 @@ export default class Table extends AbstractComponent {
         hidden?.forEach(row => {
             row.unmount();
         });
+
+        this._dispatchEvent(Event.TABLE_PAGINATION_CHANGE);
+        this._notifyControllers({ type: 'pagination' });
+    }
+
+    _clearRows() {
+        if (this.dataRows) {
+            this.dataRows?.forEach(r => this.removeChild(r));
+        }
     }
 }
