@@ -8,6 +8,58 @@ Welcome to the Kiwi user interface components library (KWUI), a project born out
 
 > "Why use something someone else made, if I can do it myself and learn how it works along the way?!"
 
+## Demo
+
+<p align="center">
+  <img src="https://static.mia.kiwi/apps/greensill/projects/kiwi.mia.0035/versions/26.3.23/gallery/demo.gif">
+</p>
+
+```javascript
+// /assets/modules/Bootstrap.mjs
+
+import AbstractComponent from './kwui/components/AbstractComponent.mjs';
+import Core from './kwui/components/core/Core.mjs';
+import ToastManager from './kwui/components/feedback/ToastManager.mjs';
+import Button from './kwui/components/control/Button.mjs';
+import Loader from './kwui/components/feedback/Loader.mjs';
+
+const APP = document.getElementById("app");
+
+AbstractComponent.styleRegister.register(Core); // Register core styling (typography, layout, etc...)
+
+// Create a toast manager to show toast
+let toaster = new ToastManager({
+    location: ToastManager.locations.top_right
+});
+
+// Create the button
+let btn = new Button({
+    type: Button.types.button,
+    cooldown: 1000,
+    counter: 0
+}, [
+    "Click me!"
+]);
+btn.addListener('click', async () => {
+    let loader= new Loader();
+
+    // Update the counter
+    btn.setProps({ counter: btn.props.counter + 1 });
+    btn.setChildren([`Clicked ${btn.props.counter} times!`, loader]);
+
+    // Show a toast
+    toaster.info(['You clicked the button!'], btn.props.cooldown);
+
+    await new Promise(r => setTimeout(r, btn.props.cooldown));
+
+    btn.removeChild(loader);
+});
+
+// Mount the toast manager and button to the app container
+toaster.mount(APP);
+btn.mount(APP);
+```
+
 ## What is it?
 
 KWUI is a standalone HTML UI components library. It lets you build UIs dynamically with Javascript without having to write raw HTML strings or redefine components over and over again.
